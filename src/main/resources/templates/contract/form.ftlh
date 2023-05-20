@@ -2,37 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Spring Boot Form Submission</title>
+    <title>Contracts</title>
     <link href="/css/main.css" rel="stylesheet">
 </head>
 <body>
-<h1>Spring Boot Form Submission</h1>
-<#if contracts?? >
+<h1>Contracts</h1>
+<#if contracts?has_content >
+    Contract Owner<br>
+    Name: ${contract.participant.name}<br><br>
+    Existing Contracts:<br>
     <#list contracts as contract>
         <tr>
             <td>${contract.id}</td>
-            <td>${contract.participant}</td>
-            <td>${contract.text }</td>
-        </tr>
-    </#list>
-    Your submitted data<br>
-    Name: ${user.name}<br>
-    Message: ${user.message}<br>
-    <#list contracts as contract>
-        <tr>
-            <td>${contract.id}</td>
-            <td>${contract.participant}</td>
-            <td>${contract.text }</td>
+            <td>${contract.text}</td>
         </tr>
     </#list>
 <#else>
-    <form action="/form" method="post">
-        <div>Name:</div>
-        <input type="text" name="name"/>
+    <form action="/contract/form" method="post">
+        hidden userId: ${userId}<br>
+        <div>Contract Text:</div>
+        <input type="text" name="text"/>
         <br/><br/>
-        <div>Message:</div>
-        <textarea rows="2" name="message"></textarea>
-        <br/><br/>
+        <input type="hidden" name="userId" id="userId" value="${userId}" />
         <input type="submit" value="Submit"/>
         <input type="reset" value="Reset"/>
     </form>

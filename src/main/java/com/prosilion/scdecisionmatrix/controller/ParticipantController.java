@@ -35,7 +35,7 @@ public class ParticipantController {
 	}
 
 	@PostMapping("/form")
-	public String formPost(Participant participant, Model model) {
+	public String createParticipant(Participant participant, Model model) {
 		System.out.println("333333333333333");
 		System.out.println("333333333333333");
 		participantService.save(participant);

@@ -30,6 +30,9 @@ public class ContractService {
   public Contract save(@NonNull Contract contract) {
     return contractRepository.save(contract);
   }
+  public List<Contract> findContractsByParticipantId(@NonNull Integer userId) {
+    return contractRepository.findContractsByParticipantId(userId);
+  }
   public List<Contract> getAll() {
     return contractRepository.findAll();
   }

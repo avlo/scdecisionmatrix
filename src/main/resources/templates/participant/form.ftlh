@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Spring Boot Form Submission</title>
+    <title>Participant</title>
     <link href="/css/main.css" rel="stylesheet">
 </head>
 <body>
-<h1>Spring Boot Form Submission</h1>
+<h1>Participant</h1>
 <#if participant?? >
-    Your submitted data<br>
+    Participant info<br>
     Name: ${participant.name}<br>
+    Id: ${participant.id}<br>
 <#else>
     <form action="/participant/form" method="post">
         <div>Name:</div>

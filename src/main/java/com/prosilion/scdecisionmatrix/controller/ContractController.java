@@ -1,17 +1,15 @@
 package com.prosilion.scdecisionmatrix.controller;
 
+import com.prosilion.scdecisionmatrix.entity.Contract;
 import com.prosilion.scdecisionmatrix.entity.Participant;
 import com.prosilion.scdecisionmatrix.service.ContractParticipantService;
-import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.context.annotation.RequestScope;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/contract")
@@ -28,17 +26,23 @@ public class ContractController {
   }
 
   @GetMapping("/form")
-//  public ModelAndView displayContracts(@PathVariable @NonNull Integer payerId) {  // TODO: display for payerId
-  public String formGet(Model model) {
-    model.addAttribute("contracts", contractParticipantService.showContracts());
+  public String formGet(@RequestParam(value = "userId") Integer userId, Model model) {
+    System.out.println("AAAAAAAAAAA");
+    System.out.println("AAAAAAAAAAA");
+    model.addAttribute("contracts", contractParticipantService.getContractsFor(userId));
+    model.addAttribute("userId", userId);
     return "contract/form";
   }
 
   @PostMapping("/form")
-  //  public ModelAndView createContract(@PathVariable @NonNull Integer payerId) { //TODO: create for payerId
-  public String createContract(Participant participant, Model model) {
-//    model.addAttribute("participant", participant);
-    model.addAttribute("contract", contractParticipantService.createContractFor(participant));
+  public String createContract(@RequestParam(value = "userId") Integer userId, Contract contract, Model model) {
+    System.out.println("BBBBBBBBBBBB");
+    System.out.println("BBBBBBBBBBBB");
+    contractParticipantService.saveContractFor(contract, userId);
+    model.addAttribute("contracts", contractParticipantService.getContractsFor(userId));
+    model.addAttribute("userId", userId);
+    System.out.println("BBBBBBBBBBBB");
+    System.out.println("BBBBBBBBBBBB");
     return "contract/form";
   }
 }
