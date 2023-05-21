@@ -18,7 +18,7 @@
         <#list contracts as contract>
             <tr>
                 <td>${contract.id}</td>
-                <td>${contract.participant}</td>
+                <td>${contract.user.username}</td>
                 <td>${contract.text }</td>
             </tr>
         </#list>

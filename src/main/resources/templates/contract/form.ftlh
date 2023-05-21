@@ -9,7 +9,7 @@
 <h1>Contracts</h1>
 <#if contracts?has_content >
     Contract Owner<br>
-    Name: ${contract.participant.name}<br><br>
+    Name: ${contract.user.username}<br><br>
     Existing Contracts:<br>
     <#list contracts as contract>
         <tr>

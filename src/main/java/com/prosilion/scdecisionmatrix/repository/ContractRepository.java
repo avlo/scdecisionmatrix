@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ContractRepository extends JpaRepository<Contract, Integer> {
-  @Query("SELECT c FROM Contract c WHERE c.participant.id = :userId")
-  List<Contract> findContractsByParticipantId(@NonNull Integer userId);
+  @Query("SELECT c FROM Contract c WHERE c.user.id = :userId")
+  List<Contract> findContractsByParticipantId(@NonNull Long userId);
 }

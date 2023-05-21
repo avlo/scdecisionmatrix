@@ -1,38 +1,39 @@
 package com.prosilion.scdecisionmatrix.service;
 
 import com.prosilion.scdecisionmatrix.entity.Contract;
-import com.prosilion.scdecisionmatrix.entity.Participant;
+import com.prosilion.scdecisionmatrix.entity.User;
 import com.prosilion.scdecisionmatrix.repository.ContractRepository;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class ContractService {
   private final ContractRepository contractRepository;
-  private final ParticipantService participantService;
 
   @Autowired
-  public ContractService(ContractRepository contractRepository, ParticipantService participantService) {
+  public ContractService(ContractRepository contractRepository) {
     this.contractRepository = contractRepository;
-    this.participantService = participantService;
   }
+
   @Transactional
-  public Contract createContractFor(@NonNull Participant participant) {
+  public Contract createContractFor(@NonNull User user) {
     Contract contract = new Contract();
-    contract.setParticipant(participant);
+    contract.setUser(user);
     return this.save(contract);
   }
+
   @Transactional
   public Contract save(@NonNull Contract contract) {
     return contractRepository.save(contract);
   }
-  public List<Contract> findContractsByParticipantId(@NonNull Integer userId) {
+
+  public List<Contract> findContractsByParticipantId(@NonNull Long userId) {
     return contractRepository.findContractsByParticipantId(userId);
   }
+
   public List<Contract> getAll() {
     return contractRepository.findAll();
   }
