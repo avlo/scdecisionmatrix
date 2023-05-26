@@ -3,16 +3,15 @@ package com.prosilion.scdecisionmatrix.security;
 import com.prosilion.scdecisionmatrix.entity.User;
 import com.prosilion.scdecisionmatrix.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 
-@Service
 public class AuthUserDetailServiceImpl implements AuthUserDetailService {
 
   @Autowired private UserRepository userRepository;
 
   @Override
-  public AuthUserDetailsImpl loadUserByUsername(String username) throws UsernameNotFoundException {
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     User user = userRepository.getUserByUsername(username);
 
     if (user == null) {

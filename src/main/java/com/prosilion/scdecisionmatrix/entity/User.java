@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "scmuser")
+//@Table(name = "scmuser")
 public class User implements Serializable {
 
   @Id
