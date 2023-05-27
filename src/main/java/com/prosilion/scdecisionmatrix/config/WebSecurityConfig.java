@@ -1,12 +1,13 @@
 package com.prosilion.scdecisionmatrix.config;
 
+import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.H2;
+
 import com.prosilion.scdecisionmatrix.security.AuthUserDetailService;
 import com.prosilion.scdecisionmatrix.security.AuthUserDetailServiceImpl;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,24 +20,24 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfig {
 
-  //  private final AuthUserDetailService authUserDetailService;
-//
-//  @Autowired
-//  public WebSecurityConfig(AuthUserDetailService authUserDetailService) {
-//    this.authUserDetailService = authUserDetailService;
-//  }
   private static final AntPathRequestMatcher[] WHITE_LIST_URLS = {
-      new AntPathRequestMatcher("/user/**"),
-      new AntPathRequestMatcher("/contract/**"),
-      // new AntPathRequestMatcher("/h2-console/**"),
+    new AntPathRequestMatcher("/user/**"), new AntPathRequestMatcher("/contract/**"),
+    // new AntPathRequestMatcher("/h2-console/**"),
   };
+
+  @Bean
+  DataSource dataSource() {
+    return new EmbeddedDatabaseBuilder()
+        .setType(H2)
+        .addScript(JdbcDaoImpl.DEFAULT_USER_SCHEMA_DDL_LOCATION)
+        .build();
+  }
+
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-        .cors()
+    http.cors()
         .and()
         .csrf()
         .disable()
@@ -51,37 +52,18 @@ public class WebSecurityConfig {
     return new BCryptPasswordEncoder(11);
   }
 
-//  @Bean
-//  public DataSource dataSource() {
-//    return new EmbeddedDatabaseBuilder()
-//        .setType(EmbeddedDatabaseType.H2)
-////        .addScript(JdbcDaoImpl.DEFAULT_USER_SCHEMA_DDL_LOCATION)
-//        .build();
-//  }
-
   @Bean
   AuthUserDetailService getUserDetailsService() {
     return new AuthUserDetailServiceImpl();
   }
 
   @Bean
-  public DaoAuthenticationProvider authenticationProvider(){
+  public DaoAuthenticationProvider authenticationProvider() {
     DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
     provider.setPasswordEncoder(passwordEncoder());
     provider.setUserDetailsService(getUserDetailsService());
     return provider;
   }
-
-  //
-//  @Bean
-//  public UserDetailsManager users(DataSource dataSource) {
-//    UserDetails user =
-//        //        User.withDefaultPasswordEncoder()
-//        User.builder().username("user").password("password").roles("USER").build();
-//    JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
-//    users.createUser(user);
-//    return users;
-//  }
 
   @Bean
   WebSecurityCustomizer webSecurityCustomizer() {

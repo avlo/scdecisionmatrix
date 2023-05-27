@@ -8,12 +8,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class ScdecisionmatrixApplication {
 
   public static void main(String[] args) {
-    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-    System.out.println("0000000000000000000");
-    System.out.println("0000000000000000000");
-    System.out.println(encoder.encode("user"));
-    System.out.println("0000000000000000000");
-    System.out.println("0000000000000000000");
     SpringApplication.run(ScdecisionmatrixApplication.class, args);
   }
 }

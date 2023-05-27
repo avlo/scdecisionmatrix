@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Entity
-//@Table(name = "scmuser")
+@Table(name = "scmuser")
 public class User implements Serializable {
 
   @Id
@@ -15,14 +15,14 @@ public class User implements Serializable {
 
   private String username;
   private String password;
-//  private boolean enabled;
+  //  private boolean enabled;
 
-	//	private Long satoshis;
-	//	private Long reputation; // (f(contract_state(payer_state, payee_state, payout_time))
+  //	private Long satoshis;
+  //	private Long reputation; // (f(contract_state(payer_state, payee_state, payout_time))
 
-	@OneToOne(mappedBy = "user", optional = true)
+  @OneToOne(mappedBy = "user", optional = true)
   private Contract contract;
 
-//	@OneToOne(mappedBy = "user", optional = false) // TODO: change to ROLE, user_role table
-	private String role;
+  //	@OneToOne(mappedBy = "user", optional = false) // TODO: change to ROLE, user_role table
+  private String role;
 }

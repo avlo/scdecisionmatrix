@@ -1,6 +1,7 @@
 package com.prosilion.scdecisionmatrix.controller;
 
 import com.prosilion.scdecisionmatrix.entity.User;
+import com.prosilion.scdecisionmatrix.security.AuthUserDetailService;
 import com.prosilion.scdecisionmatrix.security.AuthUserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,10 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/user")
 public class UserController {
 
-  private final AuthUserDetailServiceImpl authUserDetailService;
-
+  private final AuthUserDetailService authUserDetailService;
   @Autowired
-  public UserController(AuthUserDetailServiceImpl authUserDetailService) {
+  public UserController(AuthUserDetailService authUserDetailService) {
     this.authUserDetailService = authUserDetailService;
   }
 
