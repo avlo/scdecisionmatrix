@@ -12,9 +12,12 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -27,6 +30,11 @@ public class WebSecurityConfig {
     // new AntPathRequestMatcher("/h2-console/**"),
   };
 
+  /**
+   * TODO: change to external datasource once auth/auth process properly works
+   *
+   * @return
+   */
   @Bean
   DataSource dataSource() {
     return new EmbeddedDatabaseBuilder()
@@ -37,7 +45,8 @@ public class WebSecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.cors()
+    http.formLogin(form -> form.loginPage("/login").permitAll())
+        .cors()
         .and()
         .csrf()
         .disable()
@@ -49,11 +58,15 @@ public class WebSecurityConfig {
 
   @Bean
   public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder(11);
+    return new BCryptPasswordEncoder();
   }
 
   @Bean
   AuthUserDetailService getUserDetailsService() {
+    UserDetails user = User.withUsername("nick").password("avlo").roles("USER_ROLE").build();
+
+    JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource());
+    users.createUser(user);
     return new AuthUserDetailServiceImpl();
   }
 
