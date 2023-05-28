@@ -26,7 +26,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class WebSecurityConfig {
 
   private static final AntPathRequestMatcher[] WHITE_LIST_URLS = {
-    new AntPathRequestMatcher("/user/**"), new AntPathRequestMatcher("/contract/**"),
+//    new AntPathRequestMatcher("/user/**"), new AntPathRequestMatcher("/contract/**"),
     // new AntPathRequestMatcher("/h2-console/**"),
   };
 
@@ -45,15 +45,26 @@ public class WebSecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.formLogin(form -> form.loginPage("/login").permitAll())
-        .cors()
-        .and()
-        .csrf()
-        .disable()
-        .authorizeHttpRequests()
-        .requestMatchers(WHITE_LIST_URLS)
-        .permitAll();
+    http.formLogin()
+        .loginPage("/login")
+        .loginProcessingUrl("/perform_login")
+        .defaultSuccessUrl("/homepage.html",true)
+        .failureUrl("/login.html?error=true");
     return http.build();
+//    http.formLogin(
+//            form ->
+//                form.loginPage("/login")
+//                    .permitAll())
+////                    .loginProcessingUrl("/perform_login")
+////                    .defaultSuccessUrl("/homepage.html", true))
+//        .cors()
+//        .and()
+//        .csrf()
+//        .disable()
+//        .authorizeHttpRequests()
+//        .requestMatchers(WHITE_LIST_URLS)
+//        .permitAll();
+//    return http.build();
   }
 
   @Bean
@@ -63,8 +74,9 @@ public class WebSecurityConfig {
 
   @Bean
   AuthUserDetailService getUserDetailsService() {
-    UserDetails user = User.withUsername("nick").password("avlo").roles("USER_ROLE").build();
-
+    UserDetails user =
+//        User.withUsername("nick").password(passwordEncoder().encode("password")).roles("USER").build();
+    User.withUsername("nick").password("password").roles("USER").build();
     JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource());
     users.createUser(user);
     return new AuthUserDetailServiceImpl();
