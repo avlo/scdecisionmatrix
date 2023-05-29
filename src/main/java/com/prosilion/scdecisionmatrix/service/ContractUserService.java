@@ -6,16 +6,18 @@ import com.prosilion.scdecisionmatrix.security.AuthUserDetailService;
 import java.util.List;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ContractUserService {
   private final ContractService contractService;
-  private final AuthUserDetailService userDetailService;
+  private final UserDetailsService userDetailService;
 
   @Autowired
   public ContractUserService(
-      ContractService contractService, AuthUserDetailService userDetailService) {
+      ContractService contractService, UserDetailsService userDetailService) {
     this.contractService = contractService;
     this.userDetailService = userDetailService;
   }
@@ -26,15 +28,15 @@ public class ContractUserService {
     System.out.println(contract.getText());
     System.out.println("CCCCCCCCCC");
     System.out.println("CCCCCCCCCC");
-    User user = userDetailService.loadUserById(userId);
-    contract.setUser(user);
+    UserDetails user = userDetailService.loadUserByUsername("user");
+//    contract.setUser(user.get);
     Contract newContract = contractService.save(contract);
     return newContract;
   }
 
-  public Contract createContractFor(@NonNull User user) {
-    return contractService.createContractFor(userDetailService.loadUserById(user.getId()));
-  }
+//  public Contract createContractFor(@NonNull User user) {
+//    return contractService.createContractFor(userDetailService.loadUserById(user.getId()));
+//  }
 
   public List<Contract> getContracts() {
     return contractService.getAll();

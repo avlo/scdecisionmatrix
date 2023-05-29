@@ -2,22 +2,20 @@ package com.prosilion.scdecisionmatrix.config;
 
 import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.H2;
 
-import com.prosilion.scdecisionmatrix.security.AuthUserDetailService;
-import com.prosilion.scdecisionmatrix.security.AuthUserDetailServiceImpl;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -26,7 +24,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class WebSecurityConfig {
 
   private static final AntPathRequestMatcher[] WHITE_LIST_URLS = {
-//    new AntPathRequestMatcher("/user/**"), new AntPathRequestMatcher("/contract/**"),
+    //    new AntPathRequestMatcher("/user/**"), new AntPathRequestMatcher("/contract/**"),
     // new AntPathRequestMatcher("/h2-console/**"),
   };
 
@@ -45,26 +43,55 @@ public class WebSecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.formLogin()
-        .loginPage("/login")
-        .loginProcessingUrl("/perform_login")
-        .defaultSuccessUrl("/homepage.html",true)
-        .failureUrl("/login.html?error=true");
+    http.authorizeHttpRequests()
+        .requestMatchers("/**")
+        .hasRole("USER")
+        .and()
+        .formLogin()
+        .successForwardUrl("/loginuser");
     return http.build();
-//    http.formLogin(
-//            form ->
-//                form.loginPage("/login")
-//                    .permitAll())
-////                    .loginProcessingUrl("/perform_login")
-////                    .defaultSuccessUrl("/homepage.html", true))
-//        .cors()
-//        .and()
-//        .csrf()
-//        .disable()
-//        .authorizeHttpRequests()
-//        .requestMatchers(WHITE_LIST_URLS)
-//        .permitAll();
+
+//        http.formLogin()
+//            .loginPage("/login")
+//            .loginProcessingUrl("/perform_login")
+//            .defaultSuccessUrl("/homepage.html", true)
+//            .failureUrl("/login.html?error=true");
+//        return http.build();
+
+//    http.authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated())
+//        .httpBasic(withDefaults());
 //    return http.build();
+
+    //    http.formLogin(
+    //            form ->
+    //                form.loginPage("/login")
+    //                            .loginProcessingUrl("/perform_login")
+    //                    .permitAll())
+    //        ////                    .defaultSuccessUrl("/homepage.html", true))
+    //        .cors()
+    //        .and()
+    //        .csrf()
+    //        .disable()
+    //        .authorizeHttpRequests()
+    //        .requestMatchers(WHITE_LIST_URLS)
+    //        .permitAll();
+    //        return http.build();
+
+    //    http.userDetailsService(getUserDetailsService())
+    //        .authorizeRequests()
+    //        .anyRequest()
+    //        .authenticated()
+    //        .and()
+    //        .formLogin()
+    //        .loginPage("/login")
+    //        .permitAll()
+    //        .successForwardUrl("/index")
+    ////        .and()
+    ////        .logout()
+    //        .permitAll();
+    ////        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+    ////        .logoutSuccessUrl("/login");
+    //    return http.build();
   }
 
   @Bean
@@ -73,22 +100,50 @@ public class WebSecurityConfig {
   }
 
   @Bean
-  AuthUserDetailService getUserDetailsService() {
-    UserDetails user =
-//        User.withUsername("nick").password(passwordEncoder().encode("password")).roles("USER").build();
-    User.withUsername("nick").password("password").roles("USER").build();
-    JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource());
-    users.createUser(user);
-    return new AuthUserDetailServiceImpl();
+  public UserDetailsService userDetailsService() {
+      UserDetails user = User.withUsername("user").password(passwordEncoder().encode("pass")).roles("USER").build();
+//    UserDetails user = User.withUsername("user").password("pass").roles("USER").build();
+//    UserDetails user = User.withDefaultPasswordEncoder()
+//        .username("user")
+//        .password("pass")
+//        .roles("USER")
+//        .build();
+    return new InMemoryUserDetailsManager(user);
   }
+//  @Bean
+//  public UserDetailsService getUserDetailsService() {
+//    //    UserDetails user =
+//    //
+//    // User.withUsername("user").password(passwordEncoder().encode("pass")).roles("USER").build();
+//    UserDetails user = User.withUsername("user").password("pass").roles("USER").build();
+//    JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource());
+//    users.createUser(user);
+//    return new AuthUserDetailServiceImpl();
+//  }
 
-  @Bean
-  public DaoAuthenticationProvider authenticationProvider() {
-    DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-    provider.setPasswordEncoder(passwordEncoder());
-    provider.setUserDetailsService(getUserDetailsService());
-    return provider;
-  }
+//  @Bean
+//  public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+//    System.out.println("AuthenticationManager 333333333333333");
+//    System.out.println("AuthenticationManager 333333333333333");
+//    AuthenticationManagerBuilder authenticationManagerBuilder =
+//        http.getSharedObject(AuthenticationManagerBuilder.class);
+//    authenticationManagerBuilder.authenticationProvider(authenticationProvider());
+//    System.out.println("AuthenticationManager 333333333333333");
+//    System.out.println("AuthenticationManager 333333333333333");
+//    return authenticationManagerBuilder.build();
+//  }
+
+//  @Bean
+//  public DaoAuthenticationProvider authenticationProvider() {
+//    System.out.println("AuthenticationProvider 44444444444444");
+//    System.out.println("AuthenticationProvider 44444444444444");
+//    DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+//    //    provider.setPasswordEncoder(passwordEncoder());
+//    provider.setUserDetailsService(getUserDetailsService());
+//    System.out.println("AuthenticationProvider 44444444444444");
+//    System.out.println("AuthenticationProvider 44444444444444");
+//    return provider;
+//  }
 
   @Bean
   WebSecurityCustomizer webSecurityCustomizer() {

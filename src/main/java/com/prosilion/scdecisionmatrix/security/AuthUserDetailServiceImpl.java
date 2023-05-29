@@ -5,10 +5,11 @@ import com.prosilion.scdecisionmatrix.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Transactional
-public class AuthUserDetailServiceImpl implements AuthUserDetailService {
+public class AuthUserDetailServiceImpl implements UserDetailsService {
 
   @Autowired
   private UserRepository userRepository;
@@ -24,7 +25,7 @@ public class AuthUserDetailServiceImpl implements AuthUserDetailService {
     return new AuthUserDetailsImpl(user);
   }
 
-  @Override
+//  @Override
   public User loadUserById(Long id) throws UsernameNotFoundException {
     return userRepository.getUserById(id);
   }
