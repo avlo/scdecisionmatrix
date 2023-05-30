@@ -1,28 +1,27 @@
 package com.prosilion.scdecisionmatrix.security;
 
 import jakarta.transaction.Transactional;
+import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 @Transactional
-public class AuthUserDetailServiceImpl implements AuthUserDetailsService {
-
-  private final JdbcUserDetailsManager jdbcUserDetailsManager;
+public class AuthUserDetailServiceImpl extends JdbcUserDetailsManager implements AuthUserDetailsService {
 
   @Autowired
-  public AuthUserDetailServiceImpl(JdbcUserDetailsManager jdbcUserDetailsManager) {
-    this.jdbcUserDetailsManager = jdbcUserDetailsManager;
+  public AuthUserDetailServiceImpl(DataSource dataSource) {
+    super(dataSource);
   }
 
   @Override
-  public void createUser(UserDetails authUserDetails) {
-    jdbcUserDetailsManager.createUser(authUserDetails);
+  public void createUser(AuthUserDetails authUserDetails) {
+    super.createUser(authUserDetails);
   }
   @Override
   public AuthUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    UserDetails user = jdbcUserDetailsManager.loadUserByUsername(username);
+    UserDetails user = super.loadUserByUsername(username);
 
     if (user == null) {
       throw new UsernameNotFoundException("Could not find user");

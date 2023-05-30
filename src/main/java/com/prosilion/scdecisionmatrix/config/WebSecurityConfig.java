@@ -3,6 +3,8 @@ package com.prosilion.scdecisionmatrix.config;
 import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.H2;
 
 import com.prosilion.scdecisionmatrix.security.AuthUserDetailServiceImpl;
+import com.prosilion.scdecisionmatrix.security.AuthUserDetails;
+import com.prosilion.scdecisionmatrix.security.AuthUserDetailsImpl;
 import com.prosilion.scdecisionmatrix.security.AuthUserDetailsService;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
@@ -13,11 +15,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -105,14 +105,10 @@ public class WebSecurityConfig {
 //  }
 
   @Bean
-  public JdbcUserDetailsManager jdbcUserDetailsManager() {
-    return new JdbcUserDetailsManager(dataSource());
-  }
-  @Bean
   public AuthUserDetailsService getUserDetailsService() {
-    UserDetails user =
-        User.withUsername("user").password(passwordEncoder().encode("pass")).roles("USER").build();
-    AuthUserDetailsService users = new AuthUserDetailServiceImpl(jdbcUserDetailsManager());
+    AuthUserDetails user = new AuthUserDetailsImpl(
+        User.withUsername("user").password(passwordEncoder().encode("pass")).roles("USER").build());
+    AuthUserDetailsService users = new AuthUserDetailServiceImpl(dataSource());
     users.createUser(user);
     return users;
   }
