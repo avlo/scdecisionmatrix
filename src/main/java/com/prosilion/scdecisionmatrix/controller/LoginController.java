@@ -1,6 +1,8 @@
 package com.prosilion.scdecisionmatrix.controller;
 
 import com.prosilion.scdecisionmatrix.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,36 +17,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 class LoginController {
+  private static Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
-  @Autowired UserDetailsService userDetailsService;
+  private final UserDetailsService userDetailsService;
+
+  @Autowired
+  public LoginController(UserDetailsService userDetailsService) {
+    this.userDetailsService = userDetailsService;
+  }
 
   @GetMapping("/login")
   public String showLogin(User user) {
-    return "login.html";
-  }
-
-  @GetMapping(value = "/home")
-  public String printWelcome(User user) {
-    return "login.html";
+    return "login";
   }
 
   @PostMapping("/loginuser")
   public String showLogin(@ModelAttribute User user, Model m) {
-    System.out.println("LoginController 0000000000");
-    System.out.println("LoginController 0000000000");
     UserDetails ud = userDetailsService.loadUserByUsername(user.getUsername());
-    System.out.println("User: " + ud.getUsername());
-    System.out.println("Authorities" + user.getUsername());
-    m.addAttribute("name", user.getUsername());
-    m.addAttribute("role", user.getPassword());
-    System.out.println("LoginController 0000000000");
-    System.out.println("LoginController 0000000000");
-    return "welcome.html";
+    LOGGER.debug("logged in user retrieved from DB via UserDetails: {}", ud.getUsername());
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    LOGGER.debug("authentication principal: {}", auth.getPrincipal());
+    m.addAttribute("name", ud.getUsername());
+    m.addAttribute("role", ud.getPassword());
+    return "welcome";
   }
 
   @RequestMapping({"/index", "/"})
   public String index() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    return "userdetails.html";
+    return "userdetails";
   }
 }

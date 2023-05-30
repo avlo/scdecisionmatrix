@@ -2,10 +2,14 @@ package com.prosilion.scdecisionmatrix.config;
 
 import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.H2;
 
+import com.prosilion.scdecisionmatrix.security.AuthUserDetailServiceImpl;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -15,7 +19,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -23,15 +27,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-  private static final AntPathRequestMatcher[] WHITE_LIST_URLS = {
-    //    new AntPathRequestMatcher("/user/**"), new AntPathRequestMatcher("/contract/**"),
-    // new AntPathRequestMatcher("/h2-console/**"),
-  };
-
   /**
-   * TODO: change to external datasource once auth/auth process properly works
-   *
-   * @return
+   * TODO: add external datasource once auth/auth process properly works
    */
   @Bean
   DataSource dataSource() {
@@ -51,16 +48,16 @@ public class WebSecurityConfig {
         .successForwardUrl("/loginuser");
     return http.build();
 
-//        http.formLogin()
-//            .loginPage("/login")
-//            .loginProcessingUrl("/perform_login")
-//            .defaultSuccessUrl("/homepage.html", true)
-//            .failureUrl("/login.html?error=true");
-//        return http.build();
+    //        http.formLogin()
+    //            .loginPage("/login")
+    //            .loginProcessingUrl("/perform_login")
+    //            .defaultSuccessUrl("/homepage.html", true)
+    //            .failureUrl("/login.html?error=true");
+    //        return http.build();
 
-//    http.authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated())
-//        .httpBasic(withDefaults());
-//    return http.build();
+    //    http.authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated())
+    //        .httpBasic(withDefaults());
+    //    return http.build();
 
     //    http.formLogin(
     //            form ->
@@ -99,51 +96,24 @@ public class WebSecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
+  /*************************************************
+   * KEEP FOR REFERENCE!!! internal memory user detail manager
+   *************************************************/
+//  @Bean
+//  public UserDetailsService inMemoryUserDetailsService() {
+//    UserDetails user =
+//        User.withUsername("user").password(passwordEncoder().encode("pass")).roles("USER").build();
+//    return new InMemoryUserDetailsManager(user);
+//  }
+
   @Bean
-  public UserDetailsService userDetailsService() {
-      UserDetails user = User.withUsername("user").password(passwordEncoder().encode("pass")).roles("USER").build();
-//    UserDetails user = User.withUsername("user").password("pass").roles("USER").build();
-//    UserDetails user = User.withDefaultPasswordEncoder()
-//        .username("user")
-//        .password("pass")
-//        .roles("USER")
-//        .build();
-    return new InMemoryUserDetailsManager(user);
+  public UserDetailsService getUserDetailsService() {
+    UserDetails user =
+        User.withUsername("user").password(passwordEncoder().encode("pass")).roles("USER").build();
+    JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource());
+    users.createUser(user);
+    return users;
   }
-//  @Bean
-//  public UserDetailsService getUserDetailsService() {
-//    //    UserDetails user =
-//    //
-//    // User.withUsername("user").password(passwordEncoder().encode("pass")).roles("USER").build();
-//    UserDetails user = User.withUsername("user").password("pass").roles("USER").build();
-//    JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource());
-//    users.createUser(user);
-//    return new AuthUserDetailServiceImpl();
-//  }
-
-//  @Bean
-//  public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-//    System.out.println("AuthenticationManager 333333333333333");
-//    System.out.println("AuthenticationManager 333333333333333");
-//    AuthenticationManagerBuilder authenticationManagerBuilder =
-//        http.getSharedObject(AuthenticationManagerBuilder.class);
-//    authenticationManagerBuilder.authenticationProvider(authenticationProvider());
-//    System.out.println("AuthenticationManager 333333333333333");
-//    System.out.println("AuthenticationManager 333333333333333");
-//    return authenticationManagerBuilder.build();
-//  }
-
-//  @Bean
-//  public DaoAuthenticationProvider authenticationProvider() {
-//    System.out.println("AuthenticationProvider 44444444444444");
-//    System.out.println("AuthenticationProvider 44444444444444");
-//    DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-//    //    provider.setPasswordEncoder(passwordEncoder());
-//    provider.setUserDetailsService(getUserDetailsService());
-//    System.out.println("AuthenticationProvider 44444444444444");
-//    System.out.println("AuthenticationProvider 44444444444444");
-//    return provider;
-//  }
 
   @Bean
   WebSecurityCustomizer webSecurityCustomizer() {
