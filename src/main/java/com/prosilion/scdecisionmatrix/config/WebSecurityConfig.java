@@ -3,13 +3,11 @@ package com.prosilion.scdecisionmatrix.config;
 import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.H2;
 
 import com.prosilion.scdecisionmatrix.security.AuthUserDetailServiceImpl;
+import com.prosilion.scdecisionmatrix.security.AuthUserDetailsService;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -107,10 +105,14 @@ public class WebSecurityConfig {
 //  }
 
   @Bean
-  public UserDetailsService getUserDetailsService() {
+  public JdbcUserDetailsManager jdbcUserDetailsManager() {
+    return new JdbcUserDetailsManager(dataSource());
+  }
+  @Bean
+  public AuthUserDetailsService getUserDetailsService() {
     UserDetails user =
         User.withUsername("user").password(passwordEncoder().encode("pass")).roles("USER").build();
-    JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource());
+    AuthUserDetailsService users = new AuthUserDetailServiceImpl(jdbcUserDetailsManager());
     users.createUser(user);
     return users;
   }

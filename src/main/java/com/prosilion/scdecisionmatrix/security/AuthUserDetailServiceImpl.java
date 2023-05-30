@@ -1,22 +1,28 @@
 package com.prosilion.scdecisionmatrix.security;
 
-import com.prosilion.scdecisionmatrix.entity.User;
-import com.prosilion.scdecisionmatrix.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 @Transactional
-public class AuthUserDetailServiceImpl implements UserDetailsService {
+public class AuthUserDetailServiceImpl implements AuthUserDetailsService {
+
+  private final JdbcUserDetailsManager jdbcUserDetailsManager;
 
   @Autowired
-  private UserRepository userRepository;
+  public AuthUserDetailServiceImpl(JdbcUserDetailsManager jdbcUserDetailsManager) {
+    this.jdbcUserDetailsManager = jdbcUserDetailsManager;
+  }
 
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    User user = userRepository.getUserByUsername(username);
+  public void createUser(UserDetails authUserDetails) {
+    jdbcUserDetailsManager.createUser(authUserDetails);
+  }
+  @Override
+  public AuthUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    UserDetails user = jdbcUserDetailsManager.loadUserByUsername(username);
 
     if (user == null) {
       throw new UsernameNotFoundException("Could not find user");
@@ -24,13 +30,8 @@ public class AuthUserDetailServiceImpl implements UserDetailsService {
 
     return new AuthUserDetailsImpl(user);
   }
-
-//  @Override
-  public User loadUserById(Long id) throws UsernameNotFoundException {
-    return userRepository.getUserById(id);
-  }
-
-  public User save(User user) throws UsernameNotFoundException {
-    return userRepository.saveAndFlush(user);
-  }
+//
+//  public User save(User user) throws UsernameNotFoundException {
+//    return userRepository.saveAndFlush(user);
+//  }
 }

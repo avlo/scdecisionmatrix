@@ -1,17 +1,22 @@
 package com.prosilion.scdecisionmatrix.security;
 
-import com.prosilion.scdecisionmatrix.entity.User;
-import java.util.Arrays;
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class AuthUserDetailsImpl implements UserDetails {
+public class AuthUserDetailsImpl implements AuthUserDetails {
 
-  private User user;
+  //  private boolean enabled;
 
-  public AuthUserDetailsImpl(User user) {
+  //	private Long satoshis;
+  //	private Long reputation; // (f(contract_state(payer_state, payee_state, payout_time))
+
+//  @OneToOne(mappedBy = "user", optional = true)
+//  private Contract contract;
+
+  final private UserDetails user;
+
+  public AuthUserDetailsImpl(UserDetails user) {
     this.user = user;
   }
 
@@ -19,8 +24,7 @@ public class AuthUserDetailsImpl implements UserDetails {
   public Collection<? extends GrantedAuthority> getAuthorities() {
     System.out.println("AuthUserDetailsImpl 00000000000000");
     System.out.println("AuthUserDetailsImpl 00000000000000");
-    SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());
-    return Arrays.asList(authority);
+    return user.getAuthorities();
   }
 
   @Override
