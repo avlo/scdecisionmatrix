@@ -105,7 +105,7 @@ public class WebSecurityConfig {
 //  }
 
   @Bean
-  public AuthUserDetailsService getUserDetailsService() {
+  public AuthUserDetailsService authUserDetailsService() {
     AuthUserDetails user = new AuthUserDetailsImpl(
         User.withUsername("user").password(passwordEncoder().encode("pass")).roles("USER").build());
     AuthUserDetailsService users = new AuthUserDetailServiceImpl(dataSource());

@@ -36,8 +36,8 @@ class LoginController {
     LOGGER.debug("logged in user retrieved from DB via UserDetails: {}", ud.getUsername());
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     LOGGER.debug("authentication principal: {}", auth.getPrincipal());
-    m.addAttribute("name", ud.getUsername());
-    m.addAttribute("role", ud.getPassword());
+    m.addAttribute("username", ud.getUsername());
+//    m.addAttribute("role", ud.getPassword());
     return "welcome";
   }
 

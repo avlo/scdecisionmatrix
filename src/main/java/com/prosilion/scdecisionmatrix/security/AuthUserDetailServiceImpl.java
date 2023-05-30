@@ -1,16 +1,13 @@
 package com.prosilion.scdecisionmatrix.security;
 
-import jakarta.transaction.Transactional;
 import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
-@Transactional
+//@Transactional
 public class AuthUserDetailServiceImpl extends JdbcUserDetailsManager implements AuthUserDetailsService {
 
-  @Autowired
   public AuthUserDetailServiceImpl(DataSource dataSource) {
     super(dataSource);
   }
