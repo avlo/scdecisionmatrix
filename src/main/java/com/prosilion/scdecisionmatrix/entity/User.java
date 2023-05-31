@@ -19,6 +19,6 @@ public class User {
 	private Long satoshis;
 	private Long reputation; // (f(contract_state(payer_state, payee_state, payout_time))
 
-	@OneToOne(mappedBy = "user", optional = false)
-	private Contract contract;
+//	@OneToOne(mappedBy = "user", optional = false)
+//	private Contract contract;
 }
