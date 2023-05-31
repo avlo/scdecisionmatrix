@@ -1,24 +1,29 @@
-package com.prosilion.scdecisionmatrix.security;
+package com.prosilion.scdecisionmatrix.security.entity;
 
-import com.prosilion.scdecisionmatrix.entity.User;
-import java.util.Arrays;
 import java.util.Collection;
+import lombok.NonNull;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class AuthUserDetailsImpl implements UserDetails {
+public class AuthUserDetailsImpl implements AuthUserDetails {
 
-  private User user;
+  //  private boolean enabled;
 
-  public AuthUserDetailsImpl(User user) {
+  //	private Long satoshis;
+  //	private Long reputation; // (f(contract_state(payer_state, payee_state, payout_time))
+
+//  @OneToOne(mappedBy = "user", optional = true)
+//  private Contract contract;
+
+  final private UserDetails user;
+
+  public AuthUserDetailsImpl(@NonNull UserDetails user) {
     this.user = user;
   }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());
-    return Arrays.asList(authority);
+    return user.getAuthorities();
   }
 
   @Override
@@ -49,5 +54,12 @@ public class AuthUserDetailsImpl implements UserDetails {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+
+  @Override
+  public String toString() {
+    return "AuthUserDetailsImpl{" +
+        "user=" + user +
+        '}';
   }
 }

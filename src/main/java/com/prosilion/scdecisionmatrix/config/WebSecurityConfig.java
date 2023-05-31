@@ -1,76 +1,74 @@
 package com.prosilion.scdecisionmatrix.config;
 
-import com.prosilion.scdecisionmatrix.security.AuthUserDetailService;
+import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.H2;
+
+import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailServiceImpl;
+import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetails;
+import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetailsImpl;
+import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailsService;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfig {
-
-//  private final AuthUserDetailService authUserDetailService;
-//
-//  @Autowired
-//  public WebSecurityConfig(AuthUserDetailService authUserDetailService) {
-//    this.authUserDetailService = authUserDetailService;
-//  }
-private static final AntPathRequestMatcher[] WHITE_LIST_URLS = {
-    new AntPathRequestMatcher("/user/**"),
-    new AntPathRequestMatcher("/contract/**"),
-    // new AntPathRequestMatcher("/h2-console/**"),
-};
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-        .cors()
+    http.authorizeHttpRequests()
+        .requestMatchers("/**")
+        .hasRole("USER")
         .and()
-        .csrf()
-        .disable()
-        .authorizeHttpRequests()
-        .requestMatchers(WHITE_LIST_URLS)
-        .permitAll();
+        .formLogin()
+        .successForwardUrl("/loginuser");
     return http.build();
+
+    // TODO: attempt to get below variation working at some point, has interesting handling possiblities
+    //        http.formLogin()
+    //            .loginPage("/login")
+    //            .loginProcessingUrl("/perform_login")
+    //            .defaultSuccessUrl("/homepage.html", true)
+    //            .failureUrl("/login.html?error=true");
+    //        return http.build();
+
+    // TODO: same as above w/ lambda
+    //    http.formLogin(
+    //            form ->
+    //                form.loginPage("/login")
+    //                            .loginProcessingUrl("/perform_login")
+    //                    .permitAll())
+    //        ////                    .defaultSuccessUrl("/homepage.html", true))
+    //        .cors()
+    //        .and()
+    //        .csrf()
+    //        .disable()
+    //        .authorizeHttpRequests()
+    //        .requestMatchers(WHITE_LIST_URLS)
+    //        .permitAll();
+    //        return http.build();
   }
 
   @Bean
   public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder(11);
+    return new BCryptPasswordEncoder();
   }
 
   @Bean
-  public DataSource dataSource() {
-    return new EmbeddedDatabaseBuilder()
-        .setType(EmbeddedDatabaseType.H2)
-        .addScript(JdbcDaoImpl.DEFAULT_USER_SCHEMA_DDL_LOCATION)
-        .build();
-  }
-  //
-  @Bean
-  public UserDetailsManager users(DataSource dataSource) {
-    UserDetails user =
-        //        User.withDefaultPasswordEncoder()
-        User.builder().username("user").password("password").roles("USER").build();
-    JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
-    users.createUser(user);
+  public AuthUserDetailsService authUserDetailsService(DataSource dataSource) {
+    AuthUserDetails userUser = new AuthUserDetailsImpl(User.withUsername("user").password(passwordEncoder().encode("userpass")).roles("USER").build());
+    AuthUserDetailsService users = new AuthUserDetailServiceImpl(dataSource);
+    users.createUser(userUser);
     return users;
   }
 
