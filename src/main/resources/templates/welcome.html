@@ -7,9 +7,15 @@
 </head>
 <body>
 <div class="container">
-    WELCOME HTML
-    <h3>proof getting user object & fields from contoller</h3>
+    WELCOME VIEW
     Username: [[${username}]]
+    <br>
+    <h3>contoller paraemters and local variables</h3>
+    <tr th:each="entry : ${keymap}">
+        <td th:text="${entry.key}"/>
+        <td th:text="${entry.value}"/>
+        <br>
+    </tr>
 </div>
 </body>
 </html></title>

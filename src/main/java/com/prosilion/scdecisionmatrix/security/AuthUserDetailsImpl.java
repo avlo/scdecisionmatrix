@@ -1,6 +1,7 @@
 package com.prosilion.scdecisionmatrix.security;
 
 import java.util.Collection;
+import lombok.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -16,14 +17,12 @@ public class AuthUserDetailsImpl implements AuthUserDetails {
 
   final private UserDetails user;
 
-  public AuthUserDetailsImpl(UserDetails user) {
+  public AuthUserDetailsImpl(@NonNull UserDetails user) {
     this.user = user;
   }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    System.out.println("AuthUserDetailsImpl 00000000000000");
-    System.out.println("AuthUserDetailsImpl 00000000000000");
     return user.getAuthorities();
   }
 
@@ -55,5 +54,12 @@ public class AuthUserDetailsImpl implements AuthUserDetails {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+
+  @Override
+  public String toString() {
+    return "AuthUserDetailsImpl{" +
+        "user=" + user +
+        '}';
   }
 }

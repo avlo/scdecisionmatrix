@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,17 +23,22 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-
-  /**
-   * TODO: add external datasource once auth/auth process properly works
-   */
   @Bean
-  DataSource dataSource() {
+  DataSource embeddedDataSource() {
     return new EmbeddedDatabaseBuilder()
         .setType(H2)
         .addScript(JdbcDaoImpl.DEFAULT_USER_SCHEMA_DDL_LOCATION)
         .build();
   }
+
+  // TODO: add external datasource next POC
+//  @Bean
+//  DataSource externalDataSource() {
+//    return new EmbeddedDatabaseBuilder()
+//        .setType(H2)
+//        .addScript(JdbcDaoImpl.DEFAULT_USER_SCHEMA_DDL_LOCATION)
+//        .build();
+//  }
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -46,6 +50,7 @@ public class WebSecurityConfig {
         .successForwardUrl("/loginuser");
     return http.build();
 
+    // TODO: attempt to get below variation working at some point, has interesting handling possiblities
     //        http.formLogin()
     //            .loginPage("/login")
     //            .loginProcessingUrl("/perform_login")
@@ -53,10 +58,7 @@ public class WebSecurityConfig {
     //            .failureUrl("/login.html?error=true");
     //        return http.build();
 
-    //    http.authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated())
-    //        .httpBasic(withDefaults());
-    //    return http.build();
-
+    // TODO: same as above w/ lambda
     //    http.formLogin(
     //            form ->
     //                form.loginPage("/login")
@@ -71,22 +73,6 @@ public class WebSecurityConfig {
     //        .requestMatchers(WHITE_LIST_URLS)
     //        .permitAll();
     //        return http.build();
-
-    //    http.userDetailsService(getUserDetailsService())
-    //        .authorizeRequests()
-    //        .anyRequest()
-    //        .authenticated()
-    //        .and()
-    //        .formLogin()
-    //        .loginPage("/login")
-    //        .permitAll()
-    //        .successForwardUrl("/index")
-    ////        .and()
-    ////        .logout()
-    //        .permitAll();
-    ////        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-    ////        .logoutSuccessUrl("/login");
-    //    return http.build();
   }
 
   @Bean
@@ -95,21 +81,26 @@ public class WebSecurityConfig {
   }
 
   /*************************************************
-   * KEEP FOR REFERENCE!!! internal memory user detail manager
+   * keep this method handy/commented for reference/convenience testing
+  @Bean
+  public UserDetailsService inMemoryUserDetailsService() {
+    UserDetails user =
+        User.withUsername("user").password(passwordEncoder().encode("userpass")).roles("USER").build();
+    return new InMemoryUserDetailsManager(user);
+  }
    *************************************************/
-//  @Bean
-//  public UserDetailsService inMemoryUserDetailsService() {
-//    UserDetails user =
-//        User.withUsername("user").password(passwordEncoder().encode("pass")).roles("USER").build();
-//    return new InMemoryUserDetailsManager(user);
-//  }
 
   @Bean
   public AuthUserDetailsService authUserDetailsService() {
-    AuthUserDetails user = new AuthUserDetailsImpl(
-        User.withUsername("user").password(passwordEncoder().encode("pass")).roles("USER").build());
-    AuthUserDetailsService users = new AuthUserDetailServiceImpl(dataSource());
-    users.createUser(user);
+    AuthUserDetails adminUser = new AuthUserDetailsImpl(User.withUsername("admin").password(passwordEncoder().encode("adminpass")).roles("ADMIN").build());
+    AuthUserDetails staffUser = new AuthUserDetailsImpl(User.withUsername("staff").password(passwordEncoder().encode("staffpass")).roles("STAFF").build());
+    AuthUserDetails userUser = new AuthUserDetailsImpl(User.withUsername("user").password(passwordEncoder().encode("userpass")).roles("USER").build());
+    AuthUserDetails customUser = new AuthUserDetailsImpl(User.withUsername("custom").password(passwordEncoder().encode("custompass")).roles("CUSTOM").build());
+    AuthUserDetailsService users = new AuthUserDetailServiceImpl(embeddedDataSource());
+    users.createUser(adminUser);
+    users.createUser(staffUser);
+    users.createUser(userUser);
+    users.createUser(customUser);
     return users;
   }
 

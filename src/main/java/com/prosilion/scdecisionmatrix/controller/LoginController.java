@@ -31,18 +31,19 @@ class LoginController {
   }
 
   @PostMapping("/loginuser")
-  public String showLogin(@ModelAttribute AuthUserDetails user, Model m) {
-    AuthUserDetails ud = authUserDetailsService.loadUserByUsername(user.getUsername());
-    LOGGER.debug("logged in user retrieved from DB via UserDetails: {}", ud.getUsername());
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    LOGGER.debug("authentication principal: {}", auth.getPrincipal());
-    m.addAttribute("username", ud.getUsername());
-//    m.addAttribute("role", ud.getPassword());
+  public String showLogin(@ModelAttribute AuthUserDetails authUserDetailsParameter, Authentication authenticationParameter, Model m) {
+    AuthUserDetails authUserDetails = authUserDetailsService.loadUserByUsername(authUserDetailsParameter.getUsername());
+    debug(authUserDetailsParameter, authenticationParameter);
+    m.addAttribute("username", authUserDetails.getUsername());
     return "welcome";
   }
 
-  @RequestMapping({"/index", "/"})
-  public String index() {
-    return "userdetails";
+  private void debug(AuthUserDetails authUserDetailsParameter, Authentication authenticationParameter) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    AuthUserDetails authUserDetails = authUserDetailsService.loadUserByUsername(authUserDetailsParameter.getUsername());
+    LOGGER.info("Autowired AuthUserDetils parameter: {}", authUserDetailsParameter);
+    LOGGER.info("Autowired Authentication parameter: {}", authenticationParameter);
+    LOGGER.info("AuthUserDetails from Service: {}", authUserDetails);
+    LOGGER.info("Static Security context Authentication object: {}", authentication);
   }
 }
