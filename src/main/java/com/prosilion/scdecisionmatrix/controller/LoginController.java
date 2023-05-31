@@ -26,7 +26,7 @@ class LoginController {
 
   @GetMapping("/login")
   public String showLogin(AuthUserDetails user) {
-    return "login";
+    return "login/login";
   }
 
   @PostMapping("/loginuser")
@@ -34,7 +34,7 @@ class LoginController {
     AuthUserDetails authUserDetails = authUserDetailsService.loadUserByUsername(authUserDetailsParameter.getUsername());
     debug(authUserDetailsParameter, authenticationParameter);
     m.addAttribute("username", authUserDetails.getUsername());
-    return "welcome";
+    return "login/welcome";
   }
 
   private void debug(AuthUserDetails authUserDetailsParameter, Authentication authenticationParameter) {
