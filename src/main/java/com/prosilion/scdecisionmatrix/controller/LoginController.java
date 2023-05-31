@@ -1,7 +1,7 @@
 package com.prosilion.scdecisionmatrix.controller;
 
-import com.prosilion.scdecisionmatrix.security.AuthUserDetails;
-import com.prosilion.scdecisionmatrix.security.AuthUserDetailsService;
+import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetails;
+import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 class LoginController {

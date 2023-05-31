@@ -1,4 +1,4 @@
-package com.prosilion.scdecisionmatrix.security;
+package com.prosilion.scdecisionmatrix.security.entity;
 
 import java.util.Collection;
 import lombok.NonNull;

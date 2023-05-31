@@ -2,11 +2,12 @@ package com.prosilion.scdecisionmatrix.config;
 
 import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.H2;
 
-import com.prosilion.scdecisionmatrix.security.AuthUserDetailServiceImpl;
-import com.prosilion.scdecisionmatrix.security.AuthUserDetails;
-import com.prosilion.scdecisionmatrix.security.AuthUserDetailsImpl;
-import com.prosilion.scdecisionmatrix.security.AuthUserDetailsService;
+import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailServiceImpl;
+import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetails;
+import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetailsImpl;
+import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailsService;
 import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -23,23 +24,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-  @Bean
-  DataSource embeddedDataSource() {
-    return new EmbeddedDatabaseBuilder()
-        .setType(H2)
-        .addScript(JdbcDaoImpl.DEFAULT_USER_SCHEMA_DDL_LOCATION)
-        .build();
-  }
-
-  // TODO: add external datasource next POC
-//  @Bean
-//  DataSource externalDataSource() {
-//    return new EmbeddedDatabaseBuilder()
-//        .setType(H2)
-//        .addScript(JdbcDaoImpl.DEFAULT_USER_SCHEMA_DDL_LOCATION)
-//        .build();
-//  }
-
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests()
@@ -80,27 +64,11 @@ public class WebSecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
-  /*************************************************
-   * keep this method handy/commented for reference/convenience testing
   @Bean
-  public UserDetailsService inMemoryUserDetailsService() {
-    UserDetails user =
-        User.withUsername("user").password(passwordEncoder().encode("userpass")).roles("USER").build();
-    return new InMemoryUserDetailsManager(user);
-  }
-   *************************************************/
-
-  @Bean
-  public AuthUserDetailsService authUserDetailsService() {
-    AuthUserDetails adminUser = new AuthUserDetailsImpl(User.withUsername("admin").password(passwordEncoder().encode("adminpass")).roles("ADMIN").build());
-    AuthUserDetails staffUser = new AuthUserDetailsImpl(User.withUsername("staff").password(passwordEncoder().encode("staffpass")).roles("STAFF").build());
+  public AuthUserDetailsService authUserDetailsService(DataSource dataSource) {
     AuthUserDetails userUser = new AuthUserDetailsImpl(User.withUsername("user").password(passwordEncoder().encode("userpass")).roles("USER").build());
-    AuthUserDetails customUser = new AuthUserDetailsImpl(User.withUsername("custom").password(passwordEncoder().encode("custompass")).roles("CUSTOM").build());
-    AuthUserDetailsService users = new AuthUserDetailServiceImpl(embeddedDataSource());
-    users.createUser(adminUser);
-    users.createUser(staffUser);
+    AuthUserDetailsService users = new AuthUserDetailServiceImpl(dataSource);
     users.createUser(userUser);
-    users.createUser(customUser);
     return users;
   }
 

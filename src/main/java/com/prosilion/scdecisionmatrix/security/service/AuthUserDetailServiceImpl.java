@@ -1,5 +1,7 @@
-package com.prosilion.scdecisionmatrix.security;
+package com.prosilion.scdecisionmatrix.security.service;
 
+import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetails;
+import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetailsImpl;
 import javax.sql.DataSource;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
