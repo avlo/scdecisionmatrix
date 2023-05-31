@@ -4,6 +4,9 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+/**
+ * Extendable/customizable user + Spring Security Authentication and Authorization
+ */
 public interface AuthUserDetails extends UserDetails {
 
   @Override

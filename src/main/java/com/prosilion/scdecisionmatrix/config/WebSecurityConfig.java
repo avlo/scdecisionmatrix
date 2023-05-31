@@ -64,6 +64,12 @@ public class WebSecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
+  /**
+   * Customizable bean extending JdbcUserDetailsManager for Spring Security 6.0.3
+   *
+   * @param dataSource
+   * @return AuthUserDetailsService is a customizable UserDetailsService
+   */
   @Bean
   public AuthUserDetailsService authUserDetailsService(DataSource dataSource) {
     AuthUserDetails userUser = new AuthUserDetailsImpl(User.withUsername("user").password(passwordEncoder().encode("userpass")).roles("USER").build());

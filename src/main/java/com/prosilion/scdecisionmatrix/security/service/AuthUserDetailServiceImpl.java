@@ -6,6 +6,10 @@ import javax.sql.DataSource;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
+/**
+ * Customizable service for extendable/customizable user that works with
+ * Spring Security 6.0.3 via extending JdbcUserDetailsManager
+ */
 //@Transactional
 public class AuthUserDetailServiceImpl extends JdbcUserDetailsManager implements AuthUserDetailsService {
 
