@@ -5,15 +5,13 @@ import lombok.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+/**
+ * Extendable/customizable user + Spring Security Authentication and Authorization
+ */
 public class AuthUserDetailsImpl implements AuthUserDetails {
-
-  //  private boolean enabled;
 
   //	private Long satoshis;
   //	private Long reputation; // (f(contract_state(payer_state, payee_state, payout_time))
-
-//  @OneToOne(mappedBy = "user", optional = true)
-//  private Contract contract;
 
   final private UserDetails user;
 
