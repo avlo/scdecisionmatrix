@@ -1,21 +1,19 @@
 package com.prosilion.scdecisionmatrix.config;
 
-import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.H2;
 
-import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailServiceImpl;
 import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetails;
 import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetailsImpl;
+import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailServiceImpl;
 import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailsService;
 import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -26,7 +24,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class WebSecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests()
+    http.sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+        .and()
+        .authorizeHttpRequests()
         .requestMatchers("/**")
         .hasRole("USER")
         .and()
@@ -72,7 +73,9 @@ public class WebSecurityConfig {
    */
   @Bean
   public AuthUserDetailsService authUserDetailsService(DataSource dataSource) {
-    AuthUserDetails userUser = new AuthUserDetailsImpl(User.withUsername("user").password(passwordEncoder().encode("userpass")).roles("USER").build());
+    UserDetails userDetails = User.withUsername("user").password(passwordEncoder().encode("userpass"))
+        .roles("USER").build();
+    AuthUserDetails userUser = new AuthUserDetailsImpl(userDetails);
     AuthUserDetailsService users = new AuthUserDetailServiceImpl(dataSource);
     users.createUser(userUser);
     return users;

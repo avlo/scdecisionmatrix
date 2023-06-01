@@ -1,23 +1,35 @@
 package com.prosilion.scdecisionmatrix.security.entity;
 
+import com.prosilion.scdecisionmatrix.entity.ContractUser;
 import java.util.Collection;
 import lombok.NonNull;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 /**
  * Extendable/customizable user + Spring Security Authentication and Authorization
  */
+@Component
+@Scope("session")
 public class AuthUserDetailsImpl implements AuthUserDetails {
 
-  //	private Long satoshis;
-  //	private Long reputation; // (f(contract_state(payer_state, payee_state, payout_time))
-
   final private UserDetails user;
+  final private ContractUser contractUser;
 
   public AuthUserDetailsImpl(@NonNull UserDetails user) {
     this.user = user;
+    this.contractUser = new ContractUser();
   }
+
+  @Override
+  public UserDetails getUser() {
+    return user;
+  }
+
+  @Override
+  public ContractUser getContractUser() { return contractUser; }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
