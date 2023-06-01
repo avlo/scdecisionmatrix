@@ -34,4 +34,8 @@ public class ContractContractUserService {
 	public List<Contract> getContracts(@NonNull ContractUser user) {
 		return contractService.getContracts(user);
 	}
+
+	public List<Contract> getContracts(@NonNull AuthUserDetails authUserDetails) {
+		return contractService.getContracts(authUserDetails.getContractUser());
+	}
 }

@@ -3,6 +3,7 @@ package com.prosilion.scdecisionmatrix.controller;
 import com.prosilion.scdecisionmatrix.entity.Contract;
 import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetails;
 import com.prosilion.scdecisionmatrix.service.ContractContractUserService;
+import com.prosilion.scdecisionmatrix.service.ContractService;
 import java.util.List;
 import lombok.NonNull;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/contract")
 public class ContractController {
-	private final ContractContractUserService contractContractUserService_JoinTable;
+	private final ContractContractUserService joinTable;
+	private final ContractService contractService;
 
-	public ContractController(ContractContractUserService contractContractUserService_JoinTable) {
-		this.contractContractUserService_JoinTable = contractContractUserService_JoinTable;
+	public ContractController(ContractContractUserService joinTable, ContractService contractService) {
+		this.joinTable = joinTable;
+		this.contractService = contractService;
 	}
 
 	@GetMapping("/")
@@ -28,23 +31,24 @@ public class ContractController {
 
 	@GetMapping("/display")
 	public String showContracts(@AuthenticationPrincipal AuthUserDetails user, Model model) {
-		model.addAttribute("contracts", contractContractUserService_JoinTable.getContracts(user.getContractUser()));
+		Contract contract = contractService.constructContract(user);
+		model.addAttribute("contracts", joinTable.getContracts(user));
 		model.addAttribute("username", user.getUsername());
-		Contract contract = new Contract();
-		contract.setContractUser(user.getContractUser());
 		model.addAttribute("contract", contract);
 		return "contract/display";
 	}
 
 	@PostMapping("/create")
 	public String createContract(@AuthenticationPrincipal AuthUserDetails user, @NonNull Contract contract, Model model) {
-		Contract savedContract = contractContractUserService_JoinTable.save(contract, user);
-		List<Contract> contracts = contractContractUserService_JoinTable.getContracts(user.getContractUser());
-		contracts.add(savedContract);
-		Contract newContract = new Contract();
-		newContract.setContractUser(user.getContractUser());
+		joinTable.save(contract, user);
+		model.addAttribute("contracts", joinTable.getContracts(user));
+
+//		above line should be showing all contract, but doesn't.  needs testing, but below works
+//		contracts.add(savedContract);
+
+		// below not really necessary
+		Contract newContract = contractService.constructContract(user);
 		model.addAttribute("contract", newContract);
-		model.addAttribute("contracts", contracts);
 		model.addAttribute("username", user.getUsername());
 		return "contract/display";
 	}

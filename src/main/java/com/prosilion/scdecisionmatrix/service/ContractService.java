@@ -1,8 +1,9 @@
 package com.prosilion.scdecisionmatrix.service;
 
-import com.prosilion.scdecisionmatrix.entity.ContractUser;
 import com.prosilion.scdecisionmatrix.entity.Contract;
+import com.prosilion.scdecisionmatrix.entity.ContractUser;
 import com.prosilion.scdecisionmatrix.repository.ContractRepository;
+import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetails;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.NonNull;
@@ -29,5 +30,15 @@ public class ContractService {
 
 	public List<Contract> getAll() {
 		return contractRepository.findAll();
+	}
+
+	public Contract constructContract(AuthUserDetails user) {
+		return constructContract(user.getContractUser());
+	}
+
+	public Contract constructContract(ContractUser user) {
+		Contract contract = new Contract();
+		contract.setContractUser(user);
+		return contract;
 	}
 }
