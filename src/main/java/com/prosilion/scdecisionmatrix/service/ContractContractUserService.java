@@ -2,8 +2,10 @@ package com.prosilion.scdecisionmatrix.service;
 
 import com.prosilion.scdecisionmatrix.entity.Contract;
 import com.prosilion.scdecisionmatrix.entity.ContractUser;
+import com.prosilion.scdecisionmatrix.entity.ContractuserAuthuser;
 import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetails;
 import java.util.List;
+import java.util.Optional;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,12 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class ContractContractUserService {
 	private final ContractService contractService;
 	private final ContractUserService contractUserService;
+	private final ContractUserAuthUserService contractUserAuthUserService;
 
 	@Autowired
 	public ContractContractUserService(
-			ContractService contractService, ContractUserService contractUserService) {
+			ContractService contractService, ContractUserService contractUserService, ContractUserAuthUserService contractUserAuthUserService) {
 		this.contractService = contractService;
 		this.contractUserService = contractUserService;
+		this.contractUserAuthUserService = contractUserAuthUserService;
 	}
 
 	@Transactional
@@ -28,7 +32,7 @@ public class ContractContractUserService {
 	}
 
 	public Contract save(@NonNull Contract contract, @NonNull AuthUserDetails authUserDetails) {
-		return save(contract, authUserDetails.getContractUser());
+		return save(contract, getContractUser(authUserDetails));
 	}
 
 	public List<Contract> getContracts(@NonNull ContractUser user) {
@@ -36,6 +40,11 @@ public class ContractContractUserService {
 	}
 
 	public List<Contract> getContracts(@NonNull AuthUserDetails authUserDetails) {
-		return contractService.getContracts(authUserDetails.getContractUser());
+		return contractService.getContracts(getContractUser(authUserDetails));
+	}
+
+	private ContractUser getContractUser(@NonNull AuthUserDetails authUserDetails) {
+		ContractuserAuthuser user = contractUserAuthUserService.getContractuserAuthuser(authUserDetails);
+		return contractUserService.findById(user.getId());
 	}
 }

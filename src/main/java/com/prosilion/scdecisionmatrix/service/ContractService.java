@@ -2,6 +2,7 @@ package com.prosilion.scdecisionmatrix.service;
 
 import com.prosilion.scdecisionmatrix.entity.Contract;
 import com.prosilion.scdecisionmatrix.entity.ContractUser;
+import com.prosilion.scdecisionmatrix.entity.ContractuserAuthuser;
 import com.prosilion.scdecisionmatrix.repository.ContractRepository;
 import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetails;
 import jakarta.transaction.Transactional;
@@ -13,10 +14,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class ContractService {
 	private final ContractRepository contractRepository;
-
+	private final ContractUserService contractUserService;
+	private final ContractUserAuthUserService contractUserAuthUserService;
 	@Autowired
-	public ContractService(ContractRepository contractRepository) {
+	public ContractService(ContractRepository contractRepository, ContractUserAuthUserService contractUserAuthUserService, ContractUserService contractUserService) {
 		this.contractRepository = contractRepository;
+		this.contractUserAuthUserService = contractUserAuthUserService;
+		this.contractUserService = contractUserService;
 	}
 
 	@Transactional
@@ -32,8 +36,10 @@ public class ContractService {
 		return contractRepository.findAll();
 	}
 
-	public Contract constructContract(AuthUserDetails user) {
-		return constructContract(user.getContractUser());
+	public Contract constructContract(AuthUserDetails authUserDetails) {
+		ContractuserAuthuser contractuserAuthuser = contractUserAuthUserService.getContractuserAuthuser(authUserDetails);
+		ContractUser contractUser = contractUserService.findById(contractuserAuthuser.getContractuserId());
+		return constructContract(contractUser);
 	}
 
 	public Contract constructContract(ContractUser user) {

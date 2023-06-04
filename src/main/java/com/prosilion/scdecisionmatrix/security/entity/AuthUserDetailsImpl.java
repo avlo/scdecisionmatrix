@@ -1,6 +1,6 @@
 package com.prosilion.scdecisionmatrix.security.entity;
 
-import com.prosilion.scdecisionmatrix.entity.ContractUser;
+import java.io.Serializable;
 import java.util.Collection;
 import lombok.NonNull;
 import org.springframework.context.annotation.Scope;
@@ -13,23 +13,17 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Scope("session")
-public class AuthUserDetailsImpl implements AuthUserDetails {
+public class AuthUserDetailsImpl implements AuthUserDetails, Serializable {
 
   final private UserDetails user;
-  final private ContractUser contractUser;
-
   public AuthUserDetailsImpl(@NonNull UserDetails user) {
     this.user = user;
-    this.contractUser = new ContractUser();
   }
 
   @Override
   public UserDetails getUser() {
     return user;
   }
-
-  @Override
-  public ContractUser getContractUser() { return contractUser; }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

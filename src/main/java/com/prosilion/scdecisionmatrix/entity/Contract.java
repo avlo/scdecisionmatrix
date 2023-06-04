@@ -11,7 +11,7 @@ import lombok.Setter;
 public class Contract {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Integer id;
 
 	private String text;
 	private Long payerStake, payeeStake, payoutAmount;

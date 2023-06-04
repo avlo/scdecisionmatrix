@@ -16,7 +16,7 @@ import lombok.Setter;
 public class ContractUser {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Integer id;
 	private Long satoshis;
 	private Long reputation; // (f(contract_state(payer_state, payee_state, payout_time))
 

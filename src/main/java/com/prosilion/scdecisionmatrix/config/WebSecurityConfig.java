@@ -1,19 +1,20 @@
 package com.prosilion.scdecisionmatrix.config;
 
 
-import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetails;
-import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetailsImpl;
+import com.prosilion.scdecisionmatrix.repository.ContractuserAuthuserRepository;
 import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailServiceImpl;
 import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailsService;
+import com.prosilion.scdecisionmatrix.service.ContractUserAuthUserService;
+import com.prosilion.scdecisionmatrix.service.ContractUserService;
 import javax.sql.DataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -22,18 +23,50 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
+  private static Logger LOGGER = LoggerFactory.getLogger(WebSecurityConfig.class);
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-        .and()
-        .authorizeHttpRequests()
-        .requestMatchers("/**")
-        .hasRole("USER")
-        .and()
-        .formLogin()
-        .successForwardUrl("/loginuser");
+    http.csrf().disable()
+        .authorizeHttpRequests((authorize) ->
+            authorize.requestMatchers("/login/**").permitAll()
+//                .requestMatchers("/login/**").permitAll()
+                .requestMatchers("/contract/**").hasRole("USER")
+        ).formLogin(
+            form -> form
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/contract/display")
+                .permitAll()
+        ).logout(
+            logout -> logout
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .permitAll()
+        );
     return http.build();
+//    http.sessionManagement()
+//        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+//        .and()
+//        .authorizeHttpRequests()
+//        .requestMatchers("/**")
+//        .hasRole("USER")
+//        .and()
+//        .formLogin()
+//        .successForwardUrl("/loginuser");
+//    return http.build();
+
+    /*
+    .authorizeRequests()
+                .antMatchers("/css/**", "/js/**", "/registration").permitAll()
+                .anyRequest().authenticated()
+                .and()
+            .formLogin()
+                .loginPage("/login")
+                .permitAll()
+                .and()
+            .logout()
+                .permitAll();
+     */
+
 
     // TODO: attempt to get below variation working at some point, has interesting handling possiblities
     //        http.formLogin()
@@ -65,20 +98,23 @@ public class WebSecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
-  /**
-   * Customizable bean extending JdbcUserDetailsManager for Spring Security 6.0.3
-   *
-   * @param dataSource
-   * @return AuthUserDetailsService is a customizable UserDetailsService
-   */
+  @Bean
+  public ContractUserAuthUserService contractUserAuthUserService(AuthUserDetailsService authUserDetailsService,
+      ContractUserService contractUserService, ContractuserAuthuserRepository contractuserAuthuserRepository) {
+    LOGGER.info("WebSecurityConfig 000000000000000000000");
+    LOGGER.info("WebSecurityConfig 000000000000000000000");
+    return new ContractUserAuthUserService(authUserDetailsService, contractUserService, contractuserAuthuserRepository);
+  }
   @Bean
   public AuthUserDetailsService authUserDetailsService(DataSource dataSource) {
-    UserDetails userDetails = User.withUsername("user").password(passwordEncoder().encode("userpass"))
-        .roles("USER").build();
-    AuthUserDetails userUser = new AuthUserDetailsImpl(userDetails);
-    AuthUserDetailsService users = new AuthUserDetailServiceImpl(dataSource);
-    users.createUser(userUser);
-    return users;
+//    UserDetails userDetails = User.withUsername("user").password(passwordEncoder().encode("userpass"))
+//        .roles("USER").build();
+//    AuthUserDetails userUser = new AuthUserDetailsImpl(userDetails);
+    LOGGER.info("WebSecurityConfig 111111111111111111111");
+    LOGGER.info("WebSecurityConfig 111111111111111111111");
+    AuthUserDetailsService authUserDetailsService = new AuthUserDetailServiceImpl(dataSource);
+//    authUserDetailsService.createUser(userUser);
+    return authUserDetailsService;
   }
 
   @Bean
