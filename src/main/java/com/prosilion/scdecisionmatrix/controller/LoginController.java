@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller
+//@Controller
 //@RequestMapping("/login")
 class LoginController {
   private static Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
@@ -30,28 +30,19 @@ class LoginController {
     this.contractUserAuthUserService = contractUserAuthUserService;
   }
 
-  @GetMapping("/login")
-  public String showLogin() {
-    LOGGER.info("LoginCtonroller showLogin() 11111111111111111111 ");
-    LOGGER.info("LoginCtonroller showLogin() 11111111111111111111 ");
-    return "login/login";
-  }
+//  @GetMapping("/login")
+//  public String showLogin() {
+//    LOGGER.info("LoginCtonroller showLogin() 11111111111111111111 ");
+//    LOGGER.info("LoginCtonroller showLogin() 11111111111111111111 ");
+//    return "login/login";
+//  }
 
-  @PostMapping("/loginuser")
-  public String loginUser(@AuthenticationPrincipal AuthUserDetails user, Model m) {
-    LOGGER.info("LoginCtonroller loginUser() 22222222222222222222 ");
-    LOGGER.info("LoginCtonroller loginUser() 22222222222222222222 ");
-    AuthUserDetails authUserDetails = authUserDetailsService.loadUserByUsername(user.getUsername());
-    m.addAttribute("username", authUserDetails.getUsername());
-    return "login/welcome";
-  }
-
-  @PostMapping("/createuser")
-  public String registerUser(@AuthenticationPrincipal AuthUserDetails auth, Model m) {
-    LOGGER.info("LoginCtonroller registerUser() 33333333333333333333 ");
-    LOGGER.info("LoginCtonroller registerUser() 33333333333333333333 ");
-    ContractuserAuthuser contractuserAuthuser = contractUserAuthUserService.createUser(auth);
-    m.addAttribute("username", contractuserAuthuser.getAuthuserName());
-    return "login/welcome";
-  }
+//  @PostMapping("/loginuser")
+//  public String loginUser(@AuthenticationPrincipal AuthUserDetails user, Model m) {
+//    LOGGER.info("LoginCtonroller loginUser() 22222222222222222222 ");
+//    LOGGER.info("LoginCtonroller loginUser() 22222222222222222222 ");
+//    AuthUserDetails authUserDetails = authUserDetailsService.loadUserByUsername(user.getUsername());
+//    m.addAttribute("username", authUserDetails.getUsername());
+//    return "login/welcome";
+//  }
 }

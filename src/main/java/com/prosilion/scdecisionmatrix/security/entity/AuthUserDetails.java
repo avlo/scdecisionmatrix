@@ -1,6 +1,5 @@
 package com.prosilion.scdecisionmatrix.security.entity;
 
-import com.prosilion.scdecisionmatrix.entity.ContractUser;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**

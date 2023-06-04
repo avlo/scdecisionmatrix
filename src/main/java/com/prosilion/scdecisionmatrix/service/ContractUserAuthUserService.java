@@ -2,6 +2,7 @@ package com.prosilion.scdecisionmatrix.service;
 
 import com.prosilion.scdecisionmatrix.entity.ContractUser;
 import com.prosilion.scdecisionmatrix.entity.ContractuserAuthuser;
+import com.prosilion.scdecisionmatrix.entity.UserDto;
 import com.prosilion.scdecisionmatrix.repository.ContractuserAuthuserRepository;
 import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetails;
 import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailsService;
@@ -25,12 +26,9 @@ public class ContractUserAuthUserService {
 	}
 
 	@Transactional
-	public ContractuserAuthuser createUser(@NonNull AuthUserDetails authUserDetails) {
-		LOGGER.info("ContractUserAuthUserService 0000000000000000");
-		LOGGER.info("ContractUserAuthUserService 0000000000000000");
-		authUserDetailsService.createUser(authUserDetails);
+	public ContractuserAuthuser createUser(@NonNull UserDto userDto) {
+		AuthUserDetails savedAuthUserDetails = authUserDetailsService.loadUserByUserDto(userDto);
 		ContractUser contractUser = contractUserService.save(new ContractUser());
-		AuthUserDetails savedAuthUserDetails = authUserDetailsService.loadUserByUsername(authUserDetails.getUsername());
 		ContractuserAuthuser contractuserAuthuser = new ContractuserAuthuser(contractUser.getId(), savedAuthUserDetails.getUsername());
 		return contractuserAuthuserRepository.saveAndFlush(contractuserAuthuser);
 	}

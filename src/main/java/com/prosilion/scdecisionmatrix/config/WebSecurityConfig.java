@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,8 +27,8 @@ public class WebSecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf().disable()
         .authorizeHttpRequests((authorize) ->
-            authorize.requestMatchers("/login/**").permitAll()
-//                .requestMatchers("/login/**").permitAll()
+            authorize.requestMatchers("/register/**").permitAll()
+                .requestMatchers("/index").permitAll()
                 .requestMatchers("/contract/**").hasRole("USER")
         ).formLogin(
             form -> form
@@ -101,19 +100,11 @@ public class WebSecurityConfig {
   @Bean
   public ContractUserAuthUserService contractUserAuthUserService(AuthUserDetailsService authUserDetailsService,
       ContractUserService contractUserService, ContractuserAuthuserRepository contractuserAuthuserRepository) {
-    LOGGER.info("WebSecurityConfig 000000000000000000000");
-    LOGGER.info("WebSecurityConfig 000000000000000000000");
     return new ContractUserAuthUserService(authUserDetailsService, contractUserService, contractuserAuthuserRepository);
   }
   @Bean
   public AuthUserDetailsService authUserDetailsService(DataSource dataSource) {
-//    UserDetails userDetails = User.withUsername("user").password(passwordEncoder().encode("userpass"))
-//        .roles("USER").build();
-//    AuthUserDetails userUser = new AuthUserDetailsImpl(userDetails);
-    LOGGER.info("WebSecurityConfig 111111111111111111111");
-    LOGGER.info("WebSecurityConfig 111111111111111111111");
-    AuthUserDetailsService authUserDetailsService = new AuthUserDetailServiceImpl(dataSource);
-//    authUserDetailsService.createUser(userUser);
+    AuthUserDetailsService authUserDetailsService = new AuthUserDetailServiceImpl(dataSource, passwordEncoder());
     return authUserDetailsService;
   }
 

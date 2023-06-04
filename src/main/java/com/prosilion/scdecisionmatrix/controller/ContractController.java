@@ -24,11 +24,6 @@ public class ContractController {
 		this.contractService = contractService;
 	}
 
-	@GetMapping("/")
-	public String index() {
-		return "redirect:/contract/display";
-	}
-
 	@GetMapping("/display")
 	public String showContracts(@AuthenticationPrincipal AuthUserDetails user, Model model) {
 		Contract contract = contractService.constructContract(user);
