@@ -2,7 +2,7 @@ package com.prosilion.scdecisionmatrix.service;
 
 import com.prosilion.scdecisionmatrix.entity.AppUser;
 import com.prosilion.scdecisionmatrix.entity.Contract;
-import com.prosilion.scdecisionmatrix.entity.AppuserAuthuser;
+import com.prosilion.scdecisionmatrix.entity.AppUserAuthUser;
 import com.prosilion.scdecisionmatrix.repository.ContractRepository;
 import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetails;
 import jakarta.transaction.Transactional;
@@ -37,8 +37,8 @@ public class ContractService {
 	}
 
 	public Contract constructContract(AuthUserDetails authUserDetails) {
-		AppuserAuthuser appuserAuthuser = appUserAuthUserService.getAppuserAuthuser(authUserDetails);
-		AppUser appUser = appUserService.findById(appuserAuthuser.getAppuserId());
+		AppUserAuthUser appUserAuthUser = appUserAuthUserService.getAppUserAuthUser(authUserDetails);
+		AppUser appUser = appUserService.findById(appUserAuthUser.getAppUserId());
 		return constructContract(appUser);
 	}
 

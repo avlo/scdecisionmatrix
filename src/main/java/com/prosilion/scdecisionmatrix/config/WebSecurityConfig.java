@@ -1,6 +1,6 @@
 package com.prosilion.scdecisionmatrix.config;
 
-import com.prosilion.scdecisionmatrix.repository.AppuserAuthuserRepository;
+import com.prosilion.scdecisionmatrix.repository.AppUserAuthUserRepository;
 import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailServiceImpl;
 import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailsService;
 import com.prosilion.scdecisionmatrix.service.AppUserAuthUserService;
@@ -98,9 +98,9 @@ public class WebSecurityConfig {
 
   @Bean
   public AppUserAuthUserService appUserAuthUserService(AuthUserDetailsService authUserDetailsService,
-      AppUserService appUserService, AppuserAuthuserRepository appuserAuthuserRepository) {
+      AppUserService appUserService, AppUserAuthUserRepository appUserAuthUserRepository) {
     return new AppUserAuthUserService(authUserDetailsService, appUserService,
-        appuserAuthuserRepository);
+        appUserAuthUserRepository);
   }
   @Bean
   public AuthUserDetailsService authUserDetailsService(DataSource dataSource) {

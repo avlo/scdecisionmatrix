@@ -1,7 +1,7 @@
 package com.prosilion.scdecisionmatrix.security.controller;
 
 import com.prosilion.scdecisionmatrix.dto.AppUserDto;
-import com.prosilion.scdecisionmatrix.entity.AppuserAuthuser;
+import com.prosilion.scdecisionmatrix.entity.AppUserAuthUser;
 import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailsService;
 import com.prosilion.scdecisionmatrix.service.AppUserAuthUserService;
 import org.slf4j.Logger;
@@ -49,7 +49,7 @@ public class AuthController {
 	public String registration(@ModelAttribute("user") AppUserDto appUserDto, BindingResult result, Model model){
 		LOGGER.info("AuthController 11111111111111111111111111");
 		LOGGER.info("AuthController 11111111111111111111111111");
-		AppuserAuthuser appuserAuthuser = appUserAuthUserService.createUser(appUserDto);
+		AppUserAuthUser appUserAuthUser = appUserAuthUserService.createUser(appUserDto);
 //		AuthUserDetails existingUser = authUserDetailsService.loadUserByUserDto(appUserDto);
 
 		// TODO: need to check for existing user, right now, jsut create new user every time

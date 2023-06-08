@@ -1,7 +1,7 @@
 package com.prosilion.scdecisionmatrix.service;
 
 import com.prosilion.scdecisionmatrix.entity.AppUser;
-import com.prosilion.scdecisionmatrix.entity.AppuserAuthuser;
+import com.prosilion.scdecisionmatrix.entity.AppUserAuthUser;
 import com.prosilion.scdecisionmatrix.entity.Contract;
 import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetails;
 import java.util.List;
@@ -43,7 +43,7 @@ public class ContractAppUserService {
 	}
 
 	private AppUser getAppUser(@NonNull AuthUserDetails authUserDetails) {
-		AppuserAuthuser user = appUserAuthUserService.getAppuserAuthuser(authUserDetails);
+		AppUserAuthUser user = appUserAuthUserService.getAppUserAuthUser(authUserDetails);
 		return appUserService.findById(user.getId());
 	}
 }
