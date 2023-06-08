@@ -21,18 +21,18 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-  private static Logger LOGGER = LoggerFactory.getLogger(WebSecurityConfig.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(WebSecurityConfig.class);
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf().disable()
         .authorizeHttpRequests((authorize) ->
             authorize.requestMatchers("/register/**").permitAll()
                 .requestMatchers("/index").permitAll()
-                .requestMatchers("/contract/**").hasRole("USER")
+                .requestMatchers("/users/**").hasRole("USER")
         ).formLogin(
             form -> form
                 .loginPage("/login")
-                .loginProcessingUrl("/login")
+                .loginProcessingUrl("/loginuser")
                 .defaultSuccessUrl("/users")
                 .permitAll()
         ).logout(

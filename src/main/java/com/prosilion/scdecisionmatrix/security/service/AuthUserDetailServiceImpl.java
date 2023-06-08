@@ -14,7 +14,7 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.transaction.annotation.Transactional;
 
 public class AuthUserDetailServiceImpl extends JdbcUserDetailsManager implements AuthUserDetailsService {
-  private static Logger LOGGER = LoggerFactory.getLogger(AuthUserDetailServiceImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(AuthUserDetailServiceImpl.class);
   private final PasswordEncoder passwordEncoder;
 
   public AuthUserDetailServiceImpl(DataSource dataSource, PasswordEncoder passwordEncoder) {
@@ -25,7 +25,7 @@ public class AuthUserDetailServiceImpl extends JdbcUserDetailsManager implements
   @Transactional
   @Override
   public void createUser(AppUserDto appUserDto) {
-    UserDetails userDetails = User.withUsername(appUserDto.getFirstName()).password(passwordEncoder.encode(
+    UserDetails userDetails = User.withUsername(appUserDto.getUsername()).password(passwordEncoder.encode(
         appUserDto.getPassword())).roles("USER").build();
     AuthUserDetails authUserDetails = new AuthUserDetailsImpl(userDetails);
     super.createUser(authUserDetails);
@@ -39,13 +39,13 @@ public class AuthUserDetailServiceImpl extends JdbcUserDetailsManager implements
   @Override
   public AuthUserDetails loadUserByUserDto(AppUserDto appUserDto) {
     try {
-      AuthUserDetails authUserDetails = loadUserByUsername(appUserDto.getFirstName());
+      AuthUserDetails authUserDetails = loadUserByUsername(appUserDto.getUsername());
       LOGGER.info("User found");
       return authUserDetails;
     } catch (UsernameNotFoundException u) {
       LOGGER.info("User not found, try to create new user");
       createUser(appUserDto);
-      AuthUserDetails authUserDetails= loadUserByUsername(appUserDto.getFirstName());
+      AuthUserDetails authUserDetails= loadUserByUsername(appUserDto.getUsername());
       LOGGER.info("Created new user");
       return authUserDetails;
     }

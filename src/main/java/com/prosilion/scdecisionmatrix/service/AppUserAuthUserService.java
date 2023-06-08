@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  */
 public class AppUserAuthUserService {
-	private static Logger LOGGER = LoggerFactory.getLogger(AppUserAuthUserService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AppUserAuthUserService.class);
 	private final AppUserAuthUserRepository appUserAuthUserRepository;
 	private final AuthUserDetailsService authUserDetailsService;
 	private final AppUserService appUserService;

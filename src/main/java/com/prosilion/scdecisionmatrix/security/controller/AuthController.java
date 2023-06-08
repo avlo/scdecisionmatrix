@@ -2,10 +2,10 @@ package com.prosilion.scdecisionmatrix.security.controller;
 
 import com.prosilion.scdecisionmatrix.dto.AppUserDto;
 import com.prosilion.scdecisionmatrix.entity.AppUserAuthUser;
-import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailsService;
 import com.prosilion.scdecisionmatrix.service.AppUserAuthUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,13 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class AuthController {
-	private static Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
-	private final AuthUserDetailsService authUserDetailsService;
+	private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
 	private final AppUserAuthUserService appUserAuthUserService;
 
-	public AuthController(AuthUserDetailsService authUserDetailsService,
-			AppUserAuthUserService appUserAuthUserService) {
-		this.authUserDetailsService = authUserDetailsService;
+	@Autowired
+	public AuthController(AppUserAuthUserService appUserAuthUserService) {
 		this.appUserAuthUserService = appUserAuthUserService;
 	}
 
@@ -45,6 +43,7 @@ public class AuthController {
 	@PostMapping("/register/save")
 	public String registration(@ModelAttribute("user") AppUserDto appUserDto, BindingResult result, Model model){
 		AppUserAuthUser appUserAuthUser = appUserAuthUserService.createUser(appUserDto);
+		LOGGER.info("Registered AppUserAuthUser {}", appUserAuthUser.getAuthUserName());
 
 		if(result.hasErrors()){
 			model.addAttribute("user", appUserDto);
