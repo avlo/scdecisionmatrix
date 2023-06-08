@@ -1,11 +1,9 @@
-package com.prosilion.scdecisionmatrix.controller;
+package com.prosilion.scdecisionmatrix.security.controller;
 
-import com.prosilion.scdecisionmatrix.entity.ContractuserAuthuser;
-import com.prosilion.scdecisionmatrix.entity.UserDto;
-import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetails;
+import com.prosilion.scdecisionmatrix.dto.AppUserDto;
+import com.prosilion.scdecisionmatrix.entity.AppuserAuthuser;
 import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailsService;
-import com.prosilion.scdecisionmatrix.service.ContractUserAuthUserService;
-import java.util.List;
+import com.prosilion.scdecisionmatrix.service.AppUserAuthUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -19,12 +17,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class AuthController {
 	private static Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 	private final AuthUserDetailsService authUserDetailsService;
-	private final ContractUserAuthUserService contractUserAuthUserService;
+	private final AppUserAuthUserService appUserAuthUserService;
 
 	public AuthController(AuthUserDetailsService authUserDetailsService,
-			ContractUserAuthUserService contractUserAuthUserService) {
+			AppUserAuthUserService appUserAuthUserService) {
 		this.authUserDetailsService = authUserDetailsService;
-		this.contractUserAuthUserService = contractUserAuthUserService;
+		this.appUserAuthUserService = appUserAuthUserService;
 	}
 
 	@GetMapping("/index")
@@ -42,17 +40,17 @@ public class AuthController {
 	public String showRegistrationForm(Model model) {
 		LOGGER.info("AuthController 0000000000000000000000000000");
 		LOGGER.info("AuthController 0000000000000000000000000000");
-		UserDto user = new UserDto();
+		AppUserDto user = new AppUserDto();
 		model.addAttribute("user", user);
 		return "register";
 	}
 
 	@PostMapping("/register/save")
-	public String registration(@ModelAttribute("user") UserDto userDto, BindingResult result, Model model){
+	public String registration(@ModelAttribute("user") AppUserDto appUserDto, BindingResult result, Model model){
 		LOGGER.info("AuthController 11111111111111111111111111");
 		LOGGER.info("AuthController 11111111111111111111111111");
-		ContractuserAuthuser contractuserAuthuser = contractUserAuthUserService.createUser(userDto);
-//		AuthUserDetails existingUser = authUserDetailsService.loadUserByUserDto(userDto);
+		AppuserAuthuser appuserAuthuser = appUserAuthUserService.createUser(appUserDto);
+//		AuthUserDetails existingUser = authUserDetailsService.loadUserByUserDto(appUserDto);
 
 		// TODO: need to check for existing user, right now, jsut create new user every time
 //		if(existingUser. != null){
@@ -61,17 +59,17 @@ public class AuthController {
 //		}
 
 		if(result.hasErrors()){
-			model.addAttribute("user", userDto);
+			model.addAttribute("user", appUserDto);
 			return "/register";
 		}
 
-//		contractUserAuthUserService.createUser(userDto);
+//		appUserAuthUserService.createUser(appUserDto);
 		return "redirect:/register?success";
 	}
 
 //	@GetMapping("/users")
 //	public String users(Model model){
-//		List<UserDto> users = userService.findAllUsers();
+//		List<AppUserDto> users = userService.findAllUsers();
 //		model.addAttribute("users", users);
 //		return "users";
 //	}

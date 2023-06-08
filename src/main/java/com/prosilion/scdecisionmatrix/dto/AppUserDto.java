@@ -1,4 +1,4 @@
-package com.prosilion.scdecisionmatrix.entity;
+package com.prosilion.scdecisionmatrix.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class AppUserDto {
 	private Long id;
 	private String firstName;
 	private String password;

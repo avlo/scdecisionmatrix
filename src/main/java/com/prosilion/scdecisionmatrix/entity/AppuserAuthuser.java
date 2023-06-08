@@ -12,16 +12,16 @@ import lombok.NonNull;
 @Data
 @NoArgsConstructor
 @Entity
-public class ContractuserAuthuser implements Serializable {
+public class AppuserAuthuser implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	private Integer contractuserId;
+	private Integer appuserId;
 	private String authuserName;
 
-	public ContractuserAuthuser(@NonNull Integer contractuserId, @NonNull String authuserName) {
-		this.contractuserId = contractuserId;
+	public AppuserAuthuser(@NonNull Integer appuserId, @NonNull String authuserName) {
+		this.appuserId = appuserId;
 		this.authuserName = authuserName;
 	}
 }

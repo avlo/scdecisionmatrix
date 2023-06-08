@@ -12,14 +12,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="contractuser")
-public class ContractUser {
+@Table(name="appuser")
+public class AppUser {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private Long satoshis;
 	private Long reputation; // (f(contract_state(payer_state, payee_state, payout_time))
 
-	@OneToOne(mappedBy = "contractUser", optional = true)
+	@OneToOne(mappedBy = "appUser", optional = true)
 	private Contract contract;
 }

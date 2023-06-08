@@ -1,8 +1,8 @@
 package com.prosilion.scdecisionmatrix.service;
 
+import com.prosilion.scdecisionmatrix.entity.AppUser;
 import com.prosilion.scdecisionmatrix.entity.Contract;
-import com.prosilion.scdecisionmatrix.entity.ContractUser;
-import com.prosilion.scdecisionmatrix.entity.ContractuserAuthuser;
+import com.prosilion.scdecisionmatrix.entity.AppuserAuthuser;
 import com.prosilion.scdecisionmatrix.repository.ContractRepository;
 import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetails;
 import jakarta.transaction.Transactional;
@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class ContractService {
 	private final ContractRepository contractRepository;
-	private final ContractUserService contractUserService;
-	private final ContractUserAuthUserService contractUserAuthUserService;
+	private final AppUserService appUserService;
+	private final AppUserAuthUserService appUserAuthUserService;
 	@Autowired
-	public ContractService(ContractRepository contractRepository, ContractUserAuthUserService contractUserAuthUserService, ContractUserService contractUserService) {
+	public ContractService(ContractRepository contractRepository, AppUserAuthUserService appUserAuthUserService, AppUserService appUserService) {
 		this.contractRepository = contractRepository;
-		this.contractUserAuthUserService = contractUserAuthUserService;
-		this.contractUserService = contractUserService;
+		this.appUserAuthUserService = appUserAuthUserService;
+		this.appUserService = appUserService;
 	}
 
 	@Transactional
@@ -28,7 +28,7 @@ public class ContractService {
 		return contractRepository.save(contract);
 	}
 
-	public List<Contract> getContracts(@NonNull ContractUser user) {
+	public List<Contract> getContracts(@NonNull AppUser user) {
 		return contractRepository.getContracts(user.getId());
 	}
 
@@ -37,14 +37,14 @@ public class ContractService {
 	}
 
 	public Contract constructContract(AuthUserDetails authUserDetails) {
-		ContractuserAuthuser contractuserAuthuser = contractUserAuthUserService.getContractuserAuthuser(authUserDetails);
-		ContractUser contractUser = contractUserService.findById(contractuserAuthuser.getContractuserId());
-		return constructContract(contractUser);
+		AppuserAuthuser appuserAuthuser = appUserAuthUserService.getAppuserAuthuser(authUserDetails);
+		AppUser appUser = appUserService.findById(appuserAuthuser.getAppuserId());
+		return constructContract(appUser);
 	}
 
-	public Contract constructContract(ContractUser user) {
+	public Contract constructContract(AppUser user) {
 		Contract contract = new Contract();
-		contract.setContractUser(user);
+		contract.setAppUser(user);
 		return contract;
 	}
 }

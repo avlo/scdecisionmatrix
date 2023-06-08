@@ -1,33 +1,25 @@
-package com.prosilion.scdecisionmatrix.controller;
+package com.prosilion.scdecisionmatrix.security.controller;
 
-import com.prosilion.scdecisionmatrix.entity.ContractuserAuthuser;
-import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetails;
 import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailsService;
-import com.prosilion.scdecisionmatrix.service.ContractUserAuthUserService;
+import com.prosilion.scdecisionmatrix.service.AppUserAuthUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 //@Controller
 //@RequestMapping("/login")
 class LoginController {
   private static Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
   private final AuthUserDetailsService authUserDetailsService;
-  private final ContractUserAuthUserService contractUserAuthUserService;
+  private final AppUserAuthUserService appUserAuthUserService;
 
   @Autowired
-  public LoginController(AuthUserDetailsService authUserDetailsService, ContractUserAuthUserService contractUserAuthUserService) {
+  public LoginController(AuthUserDetailsService authUserDetailsService, AppUserAuthUserService appUserAuthUserService) {
     LOGGER.info("LoginCtonroller ctor() 00000000000000000000 ");
     LOGGER.info("LoginCtonroller ctor() 00000000000000000000 ");
     LOGGER.info("LoginCtonroller ctor() 00000000000000000000 ");
     this.authUserDetailsService = authUserDetailsService;
-    this.contractUserAuthUserService = contractUserAuthUserService;
+    this.appUserAuthUserService = appUserAuthUserService;
   }
 
 //  @GetMapping("/login")

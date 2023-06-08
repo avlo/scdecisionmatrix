@@ -20,10 +20,10 @@ public class Contract {
 
 	@OneToOne(cascade = CascadeType.MERGE, optional = false)
 	@JoinTable(
-			name = "contract_contractuser",
+			name = "contract_appuser",
 			joinColumns = {@JoinColumn(name = "contract_id", referencedColumnName = "id")},
 			inverseJoinColumns = {
-					@JoinColumn(name = "contractuser_id", referencedColumnName = "id", nullable = false)
+					@JoinColumn(name = "appauser_id", referencedColumnName = "id", nullable = false)
 			})
-	private ContractUser contractUser;
+	private AppUser appUser;
 }

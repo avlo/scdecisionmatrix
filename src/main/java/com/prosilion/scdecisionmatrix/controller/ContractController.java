@@ -2,9 +2,8 @@ package com.prosilion.scdecisionmatrix.controller;
 
 import com.prosilion.scdecisionmatrix.entity.Contract;
 import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetails;
-import com.prosilion.scdecisionmatrix.service.ContractContractUserService;
+import com.prosilion.scdecisionmatrix.service.ContractAppUserService;
 import com.prosilion.scdecisionmatrix.service.ContractService;
-import java.util.List;
 import lombok.NonNull;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -16,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/contract")
 public class ContractController {
-	private final ContractContractUserService joinTable;
+	private final ContractAppUserService joinTable;
 	private final ContractService contractService;
 
-	public ContractController(ContractContractUserService joinTable, ContractService contractService) {
+	public ContractController(ContractAppUserService joinTable, ContractService contractService) {
 		this.joinTable = joinTable;
 		this.contractService = contractService;
 	}

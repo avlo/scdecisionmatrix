@@ -1,11 +1,10 @@
 package com.prosilion.scdecisionmatrix.config;
 
-
-import com.prosilion.scdecisionmatrix.repository.ContractuserAuthuserRepository;
+import com.prosilion.scdecisionmatrix.repository.AppuserAuthuserRepository;
 import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailServiceImpl;
 import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailsService;
-import com.prosilion.scdecisionmatrix.service.ContractUserAuthUserService;
-import com.prosilion.scdecisionmatrix.service.ContractUserService;
+import com.prosilion.scdecisionmatrix.service.AppUserAuthUserService;
+import com.prosilion.scdecisionmatrix.service.AppUserService;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,9 +97,10 @@ public class WebSecurityConfig {
   }
 
   @Bean
-  public ContractUserAuthUserService contractUserAuthUserService(AuthUserDetailsService authUserDetailsService,
-      ContractUserService contractUserService, ContractuserAuthuserRepository contractuserAuthuserRepository) {
-    return new ContractUserAuthUserService(authUserDetailsService, contractUserService, contractuserAuthuserRepository);
+  public AppUserAuthUserService appUserAuthUserService(AuthUserDetailsService authUserDetailsService,
+      AppUserService appUserService, AppuserAuthuserRepository appuserAuthuserRepository) {
+    return new AppUserAuthUserService(authUserDetailsService, appUserService,
+        appuserAuthuserRepository);
   }
   @Bean
   public AuthUserDetailsService authUserDetailsService(DataSource dataSource) {
