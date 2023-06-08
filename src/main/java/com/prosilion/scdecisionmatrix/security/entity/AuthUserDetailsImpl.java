@@ -8,9 +8,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-/**
- * Extendable/customizable user + Spring Security Authentication and Authorization
- */
 @Component
 @Scope("session")
 public class AuthUserDetailsImpl implements AuthUserDetails, Serializable {

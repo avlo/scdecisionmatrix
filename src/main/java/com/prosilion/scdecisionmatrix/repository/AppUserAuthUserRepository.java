@@ -7,10 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AppUserAuthUserRepository extends JpaRepository<AppUserAuthUser, Integer> {
-	//	@Query("SELECT e FROM AppUserAuthUser e WHERE e.appuserId = :appuserId")
 	Optional<AppUserAuthUser> findByAppUserId(Integer appUserId);
-
-	//	@Query("SELECT e FROM AppUserAuthUser e WHERE e.appuserId = :appuserId")
 	Optional<AppUserAuthUser> findByAuthUserName(String authUserName);
 
 //	@Modifying(clearAutomatically = true)

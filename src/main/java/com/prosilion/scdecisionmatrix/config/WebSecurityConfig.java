@@ -33,7 +33,7 @@ public class WebSecurityConfig {
             form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/contract/display")
+                .defaultSuccessUrl("/users")
                 .permitAll()
         ).logout(
             logout -> logout
@@ -41,54 +41,6 @@ public class WebSecurityConfig {
                 .permitAll()
         );
     return http.build();
-//    http.sessionManagement()
-//        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-//        .and()
-//        .authorizeHttpRequests()
-//        .requestMatchers("/**")
-//        .hasRole("USER")
-//        .and()
-//        .formLogin()
-//        .successForwardUrl("/loginuser");
-//    return http.build();
-
-    /*
-    .authorizeRequests()
-                .antMatchers("/css/**", "/js/**", "/registration").permitAll()
-                .anyRequest().authenticated()
-                .and()
-            .formLogin()
-                .loginPage("/login")
-                .permitAll()
-                .and()
-            .logout()
-                .permitAll();
-     */
-
-
-    // TODO: attempt to get below variation working at some point, has interesting handling possiblities
-    //        http.formLogin()
-    //            .loginPage("/login")
-    //            .loginProcessingUrl("/perform_login")
-    //            .defaultSuccessUrl("/homepage.html", true)
-    //            .failureUrl("/login.html?error=true");
-    //        return http.build();
-
-    // TODO: same as above w/ lambda
-    //    http.formLogin(
-    //            form ->
-    //                form.loginPage("/login")
-    //                            .loginProcessingUrl("/perform_login")
-    //                    .permitAll())
-    //        ////                    .defaultSuccessUrl("/homepage.html", true))
-    //        .cors()
-    //        .and()
-    //        .csrf()
-    //        .disable()
-    //        .authorizeHttpRequests()
-    //        .requestMatchers(WHITE_LIST_URLS)
-    //        .permitAll();
-    //        return http.build();
   }
 
   @Bean

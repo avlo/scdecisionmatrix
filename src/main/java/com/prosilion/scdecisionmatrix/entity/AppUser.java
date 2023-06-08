@@ -9,6 +9,10 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Extendable/customizable user, bound to Spring Security Authentication and Authorization
+ * @see com.prosilion.scdecisionmatrix.service.AppUserAuthUserService
+ */
 @Getter
 @Setter
 @Entity
@@ -17,9 +21,4 @@ public class AppUser {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	private Long satoshis;
-	private Long reputation; // (f(contract_state(payer_state, payee_state, payout_time))
-
-	@OneToOne(mappedBy = "appUser", optional = true)
-	private Contract contract;
 }

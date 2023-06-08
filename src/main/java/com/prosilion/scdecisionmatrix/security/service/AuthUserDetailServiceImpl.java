@@ -13,11 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Customizable service for extendable/customizable user that works with
- * Spring Security 6.0.3 via extending JdbcUserDetailsManager
- */
-//@Transactional
 public class AuthUserDetailServiceImpl extends JdbcUserDetailsManager implements AuthUserDetailsService {
   private static Logger LOGGER = LoggerFactory.getLogger(AuthUserDetailServiceImpl.class);
   private final PasswordEncoder passwordEncoder;
@@ -55,8 +50,4 @@ public class AuthUserDetailServiceImpl extends JdbcUserDetailsManager implements
       return authUserDetails;
     }
   }
-//
-//  public User save(User user) throws UsernameNotFoundException {
-//    return userRepository.saveAndFlush(user);
-//  }
 }

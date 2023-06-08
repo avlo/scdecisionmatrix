@@ -6,12 +6,18 @@ import com.prosilion.scdecisionmatrix.entity.AppUserAuthUser;
 import com.prosilion.scdecisionmatrix.repository.AppUserAuthUserRepository;
 import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetails;
 import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailsService;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-//@Service // this is a bean
+/**
+ * Class instantiated as bean via:
+ * @see com.prosilion.scdecisionmatrix.config.WebSecurityConfig#appUserAuthUserService(AuthUserDetailsService, AppUserService, AppUserAuthUserRepository)
+ *
+ */
 public class AppUserAuthUserService {
 	private static Logger LOGGER = LoggerFactory.getLogger(AppUserAuthUserService.class);
 	private final AppUserAuthUserRepository appUserAuthUserRepository;
@@ -39,5 +45,9 @@ public class AppUserAuthUserService {
 
 	public AppUserAuthUser getAppUserAuthUser(@NonNull AuthUserDetails authUserDetails) {
 		return appUserAuthUserRepository.findByAuthUserName(authUserDetails.getUsername()).get();
+	}
+
+	public List<AppUserAuthUser> findAllAppUsers() {
+		return appUserAuthUserRepository.findAll();
 	}
 }

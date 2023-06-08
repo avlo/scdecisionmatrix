@@ -3,6 +3,7 @@ package com.prosilion.scdecisionmatrix.service;
 import com.prosilion.scdecisionmatrix.entity.AppUser;
 import com.prosilion.scdecisionmatrix.repository.AppUserRepository;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AppUserService {
 	private final AppUserRepository appUserRepository;
 
+	@Autowired
 	public AppUserService(AppUserRepository appUserRepository) {
 		this.appUserRepository = appUserRepository;
 	}
