@@ -1,22 +1,32 @@
-package com.prosilion.scdecisionmatrix.security.entity;
+package com.prosilion.scdecisionmatrix.model.entity.security;
 
+import java.io.Serializable;
 import java.util.Collection;
 import lombok.NonNull;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 /**
- * Extendable/customizable user + Spring Security Authentication and Authorization
+ * Authentication & authorization user, directly bound to Spring Security.
+ * If you'd like a customizable user, use:
+ * @see com.prosilion.scdecisionmatrix.model.entity.AppUser
+ *
+ * Note: Spring Security using JPA maps this class to "USERS" DB table.
  */
-public class AuthUserDetailsImpl implements AuthUserDetails {
-
-  //	private Long satoshis;
-  //	private Long reputation; // (f(contract_state(payer_state, payee_state, payout_time))
+@Component
+@Scope("session")
+public class AuthUserDetailsImpl implements AuthUserDetails, Serializable {
 
   final private UserDetails user;
-
   public AuthUserDetailsImpl(@NonNull UserDetails user) {
     this.user = user;
+  }
+
+  @Override
+  public UserDetails getUser() {
+    return user;
   }
 
   @Override

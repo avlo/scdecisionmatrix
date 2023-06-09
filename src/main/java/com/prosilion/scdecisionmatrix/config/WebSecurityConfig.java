@@ -1,21 +1,18 @@
 package com.prosilion.scdecisionmatrix.config;
 
-import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.H2;
-
-import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailServiceImpl;
-import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetails;
-import com.prosilion.scdecisionmatrix.security.entity.AuthUserDetailsImpl;
-import com.prosilion.scdecisionmatrix.security.service.AuthUserDetailsService;
+import com.prosilion.scdecisionmatrix.repository.security.AppUserAuthUserRepository;
+import com.prosilion.scdecisionmatrix.service.security.AuthUserDetailServiceImpl;
+import com.prosilion.scdecisionmatrix.service.security.AuthUserDetailsService;
+import com.prosilion.scdecisionmatrix.service.AppUserAuthUserService;
+import com.prosilion.scdecisionmatrix.service.AppUserService;
 import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,39 +21,27 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
+  private static final Logger LOGGER = LoggerFactory.getLogger(WebSecurityConfig.class);
+
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests()
-        .requestMatchers("/**")
-        .hasRole("USER")
-        .and()
-        .formLogin()
-        .successForwardUrl("/loginuser");
+    http.csrf().disable()
+        .authorizeHttpRequests((authorize) ->
+            authorize.requestMatchers("/register/**").permitAll()
+                .requestMatchers("/index").permitAll()
+                .requestMatchers("/users/**", "/contract/**").hasRole("USER")
+        ).formLogin(
+            form -> form
+                .loginPage("/login")
+                .loginProcessingUrl("/loginuser")
+                .defaultSuccessUrl("/users")
+                .permitAll()
+        ).logout(
+            logout -> logout
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .permitAll()
+        );
     return http.build();
-
-    // TODO: attempt to get below variation working at some point, has interesting handling possiblities
-    //        http.formLogin()
-    //            .loginPage("/login")
-    //            .loginProcessingUrl("/perform_login")
-    //            .defaultSuccessUrl("/homepage.html", true)
-    //            .failureUrl("/login.html?error=true");
-    //        return http.build();
-
-    // TODO: same as above w/ lambda
-    //    http.formLogin(
-    //            form ->
-    //                form.loginPage("/login")
-    //                            .loginProcessingUrl("/perform_login")
-    //                    .permitAll())
-    //        ////                    .defaultSuccessUrl("/homepage.html", true))
-    //        .cors()
-    //        .and()
-    //        .csrf()
-    //        .disable()
-    //        .authorizeHttpRequests()
-    //        .requestMatchers(WHITE_LIST_URLS)
-    //        .permitAll();
-    //        return http.build();
   }
 
   @Bean
@@ -64,18 +49,17 @@ public class WebSecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
-  /**
-   * Customizable bean extending JdbcUserDetailsManager for Spring Security 6.0.3
-   *
-   * @param dataSource
-   * @return AuthUserDetailsService is a customizable UserDetailsService
-   */
+  @Bean
+  public AppUserAuthUserService appUserAuthUserService(AuthUserDetailsService authUserDetailsService,
+      AppUserService appUserService, AppUserAuthUserRepository appUserAuthUserRepository) {
+    return new AppUserAuthUserService(authUserDetailsService, appUserService,
+        appUserAuthUserRepository);
+  }
+
   @Bean
   public AuthUserDetailsService authUserDetailsService(DataSource dataSource) {
-    AuthUserDetails userUser = new AuthUserDetailsImpl(User.withUsername("user").password(passwordEncoder().encode("userpass")).roles("USER").build());
-    AuthUserDetailsService users = new AuthUserDetailServiceImpl(dataSource);
-    users.createUser(userUser);
-    return users;
+    AuthUserDetailsService authUserDetailsService = new AuthUserDetailServiceImpl(dataSource, passwordEncoder());
+    return authUserDetailsService;
   }
 
   @Bean
