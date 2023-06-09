@@ -1,6 +1,6 @@
 package com.prosilion.scdecisionmatrix.service;
 
-import com.prosilion.scdecisionmatrix.entity.Contract;
+import com.prosilion.scdecisionmatrix.model.entity.Contract;
 import com.prosilion.scdecisionmatrix.model.entity.AppUser;
 import com.prosilion.scdecisionmatrix.model.entity.AppUserAuthUser;
 import com.prosilion.scdecisionmatrix.model.entity.security.AuthUserDetails;
