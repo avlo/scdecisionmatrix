@@ -1,6 +1,6 @@
 package com.prosilion.scdecisionmatrix.repository;
 
-import com.prosilion.scdecisionmatrix.entity.Contract;
+import com.prosilion.scdecisionmatrix.model.entity.Contract;
 import java.util.List;
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
