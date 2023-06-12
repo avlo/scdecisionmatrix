@@ -9,16 +9,17 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Extendable/customizable user, indirectly bound to Spring Security Authentication
- * and Authorization user via join service/table:
+ * Extendable/customizable user, indirectly bound to Spring Security Authentication and
+ * Authorization user via join service/table:
+ *
  * @see com.prosilion.scdecisionmatrix.service.AppUserAuthUserService
  */
 @Getter
 @Setter
 @Entity
-@Table(name="appuser")
+@Table(name = "appuser")
 public class AppUser {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 }
