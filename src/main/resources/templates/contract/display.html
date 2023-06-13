@@ -7,16 +7,37 @@
 </head>
 <body>
 <div class="container">
-  Existing Contracts: <span th:text="${contracts} ?: 'NO CONTRACTS'"></span>
-  <br>
+  Existing Contracts:
+  <table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+      <td>AppUserID</td>
+      <td>Role</td>
+      <td>Text</td>
+    </tr>
+    </thead>
+    <tbody>
+      <tr th:each="contract: ${contracts}">
+        <td th:text="${contract.getAppUserId()}" />
+        <td th:text="${contract.creatorRole}" />
+        <td th:text="${contract.getText()}" />
+        <br>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="container">
+  <br><br>
   Contract user: [[${username}]]
   <br>
   Security based user: <span sec:authentication="principal.username">User</span>
   <br>
   Security based Roles: <span sec:authentication="principal.authorities">Roles</span>
   <br>
+  <br>
 </div>
 <div class="container">
+  <br>
   Create Contract
   <div class="wrapper">
     <div class="title"><span>contract creation form</span></div>
@@ -24,6 +45,13 @@
       <label>Contract Text</label>
       <input type="text" th:field="${contract.text}" id="text" placeholder="text">
       <span th:if="${#fields.hasErrors('text')}" th:errors="${contract.text}"></span>
+      <br>
+
+      <label>Role:</label>
+      <select name="creatorRole" th:field="${contract.creatorRole}">
+        <option th:each="role : ${T(com.prosilion.scdecisionmatrix.model.entity.CreatorRoleEnum).values()}"
+            th:value="${role}" th:text="${role.creatorRoleType}"></option>
+      </select>
       <br>
       <input type="submit" value="Create Contract">
     </form>

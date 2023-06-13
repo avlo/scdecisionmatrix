@@ -18,41 +18,49 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/contract")
 public class ContractController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ContractController.class);
-	private final ContractAppUserService joinTable;
-	private final ContractService contractService;
+  private static final Logger LOGGER = LoggerFactory.getLogger(ContractController.class);
+  private final ContractAppUserService joinTable;
+  private final ContractService contractService;
 
-	public ContractController(ContractAppUserService joinTable, ContractService contractService) {
-		this.joinTable = joinTable;
-		this.contractService = contractService;
-	}
+  public ContractController(ContractAppUserService joinTable, ContractService contractService) {
+    this.joinTable = joinTable;
+    this.contractService = contractService;
+  }
 
-	@GetMapping("/display")
-	public String showContracts(@AuthenticationPrincipal AuthUserDetails user, Model model) {
-		Contract contract = contractService.constructContract(user);
-		model.addAttribute("contracts", joinTable.getContracts(user));
-		model.addAttribute("username", user.getUsername());
-		model.addAttribute("contract", contract);
-		LOGGER.info("Contract intermediate: {}", contract.toString());
-		LOGGER.info("User for contract: {}", user.getUsername());
-		return "contract/display";
-	}
+  @PostMapping("/create")
+  public String createContract(@AuthenticationPrincipal AuthUserDetails user, @NonNull Contract contract, Model model) {
+    LOGGER.info("Creating join table contract [{}], user [{}]", contract.getText(), user.getUsername());
+    Contract savedContract = joinTable.create(contract, user);
+    LOGGER.info("Contract join table entry created [{}], user [{}]", savedContract.getText(), user.getUsername());
+    List<Contract> contractList = joinTable.getContracts(user);
+    LOGGER.info("Contract join table list [{}], user [{}]", contractList.stream().toList(), user.getUsername());
+    model.addAttribute("contracts", contractList);
 
-	@PostMapping("/create")
-	public String createContract(@AuthenticationPrincipal AuthUserDetails user, @NonNull Contract contract, Model model) {
-		LOGGER.info("Creating join table contract [{}], user [{}]", contract.getText(), user.getUsername());
-		Contract savedContract = joinTable.save(contract, user);
-		LOGGER.info("Contract join table entry created [{}], user [{}]", savedContract.getText(), user.getUsername());
-		List<Contract> contractList = joinTable.getContracts(user);
-		LOGGER.info("Contract join table list [{}], user [{}]", contractList.stream().toList(), user.getUsername());
-		model.addAttribute("contracts", contractList);
+    Contract newContract = contractService.constructContract(user);
+    LOGGER.info("Prepare to save new contract: [{}]", newContract.toString());
+    LOGGER.info("User assigned to contract: [{}]", user.getUsername());
+    model.addAttribute("contract", newContract);
+    model.addAttribute("username", user.getUsername());
+    model.addAttribute("userid", newContract.getAppUserId());
+    return "contract/display";
+  }
 
-		// below not really necessary ????
-		Contract newContract = contractService.constructContract(user);
-		LOGGER.info("Prepare to save new contract: [{}]", newContract.toString());
-		LOGGER.info("User assigned to contract: [{}]", user.getUsername());
-		model.addAttribute("contract", newContract);
-		model.addAttribute("username", user.getUsername());
-		return "contract/display";
-	}
+  @GetMapping("/display_user_contracts")
+  public String showUserContracts(@AuthenticationPrincipal AuthUserDetails user, Model model) {
+    Contract contract = contractService.constructContract(user);
+    model.addAttribute("contracts", joinTable.getContracts(user));
+    model.addAttribute("username", user.getUsername());
+    model.addAttribute("contract", contract);
+    LOGGER.info("Contract intermediate: {}", contract.toString());
+    LOGGER.info("User for contract: {}", user.getUsername());
+    return "contract/display";
+  }
+
+  @GetMapping("/display_available_contracts")
+  public String showAvailableContracts(@AuthenticationPrincipal AuthUserDetails user, Model model) {
+    model.addAttribute("contracts", joinTable.getAllContracts());
+    model.addAttribute("username", user.getUsername());
+    LOGGER.info("User for potential contract: {}", user.getUsername());
+    return "contract/display";
+  }
 }
