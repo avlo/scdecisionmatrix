@@ -27,17 +27,6 @@ public class ContractController {
     this.contractService = contractService;
   }
 
-  @GetMapping("/display")
-  public String showContracts(@AuthenticationPrincipal AuthUserDetails user, Model model) {
-    Contract contract = contractService.constructContract(user);
-    model.addAttribute("contracts", joinTable.getContracts(user));
-    model.addAttribute("username", user.getUsername());
-    model.addAttribute("contract", contract);
-    LOGGER.info("Contract intermediate: {}", contract.toString());
-    LOGGER.info("User for contract: {}", user.getUsername());
-    return "contract/display";
-  }
-
   @PostMapping("/create")
   public String createContract(@AuthenticationPrincipal AuthUserDetails user, @NonNull Contract contract, Model model) {
     LOGGER.info("Creating join table contract [{}], user [{}]", contract.getText(), user.getUsername());
@@ -53,6 +42,25 @@ public class ContractController {
     model.addAttribute("contract", newContract);
     model.addAttribute("username", user.getUsername());
     model.addAttribute("userid", newContract.getAppUserId());
+    return "contract/display";
+  }
+
+  @GetMapping("/display_user_contracts")
+  public String showUserContracts(@AuthenticationPrincipal AuthUserDetails user, Model model) {
+    Contract contract = contractService.constructContract(user);
+    model.addAttribute("contracts", joinTable.getContracts(user));
+    model.addAttribute("username", user.getUsername());
+    model.addAttribute("contract", contract);
+    LOGGER.info("Contract intermediate: {}", contract.toString());
+    LOGGER.info("User for contract: {}", user.getUsername());
+    return "contract/display";
+  }
+
+  @GetMapping("/display_available_contracts")
+  public String showAvailableContracts(@AuthenticationPrincipal AuthUserDetails user, Model model) {
+    model.addAttribute("contracts", joinTable.getAllContracts());
+    model.addAttribute("username", user.getUsername());
+    LOGGER.info("User for potential contract: {}", user.getUsername());
     return "contract/display";
   }
 }

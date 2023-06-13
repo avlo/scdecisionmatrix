@@ -49,6 +49,10 @@ public class ContractAppUserService {
     return contractService.getContracts(getAppUser(authUserDetails));
   }
 
+  public List<Contract> getAllContracts() {
+    return contractService.getAll();
+  }
+
   private AppUser getAppUser(@NonNull AuthUserDetails authUserDetails) {
     AppUserAuthUser user = appUserAuthUserService.getAppUserAuthUser(authUserDetails);
     LOGGER.info("Attempt to get user [{}]", user.getAuthUserName());

@@ -7,16 +7,37 @@
 </head>
 <body>
 <div class="container">
-  Existing Contracts: <span th:text="${contracts} ?: 'NO CONTRACTS'"></span>
-  <br>
+  Existing Contracts:
+  <table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+      <td>AppUserID</td>
+      <td>Role</td>
+      <td>Text</td>
+    </tr>
+    </thead>
+    <tbody>
+      <tr th:each="contract: ${contracts}">
+        <td th:text="${contract.getAppUserId()}" />
+        <td th:text="${contract.creatorRole}" />
+        <td th:text="${contract.getText()}" />
+        <br>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="container">
+  <br><br>
   Contract user: [[${username}]]
   <br>
   Security based user: <span sec:authentication="principal.username">User</span>
   <br>
   Security based Roles: <span sec:authentication="principal.authorities">Roles</span>
   <br>
+  <br>
 </div>
 <div class="container">
+  <br>
   Create Contract
   <div class="wrapper">
     <div class="title"><span>contract creation form</span></div>
