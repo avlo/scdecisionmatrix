@@ -37,6 +37,9 @@ public class ContractAppUserService {
   public Contract create(@NonNull Contract contract, @NonNull AuthUserDetails authUserDetails) {
     LOGGER.info("Saving contract [{}], appUser ID [{}]", contract.getText(), authUserDetails.getUsername());
     AppUser appUser = getAppUser(authUserDetails);
+    // TODO: maybe in a new class (encapsulate fxnality)
+    // 1) value should be subtracted from user balance via AppUserService
+    // 2) value should be added to contract via ContractService
     contract.setAppUserId(appUser.getId());
     return save(contract, appUser);
   }
