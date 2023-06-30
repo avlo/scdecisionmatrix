@@ -9,11 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AppUserService {
+  private final BtcBalanceService btcBalanceService;
   private final AppUserRepository appUserRepository;
 
   @Autowired
-  public AppUserService(AppUserRepository appUserRepository) {
+  public AppUserService(AppUserRepository appUserRepository, BtcBalanceService btcBalanceService) {
     this.appUserRepository = appUserRepository;
+    this.btcBalanceService = btcBalanceService;
   }
 
   public AppUser findById(Integer id) {
@@ -24,7 +26,9 @@ public class AppUserService {
     if (appUser.getId() != null) {
       return findById(appUser.getId());
     }
-    return new AppUser();
+    AppUser newAppUser = new AppUser();
+    newAppUser.setSatoshis(btcBalanceService.getBalance(newAppUser));
+    return newAppUser;
   }
 
   @Transactional
