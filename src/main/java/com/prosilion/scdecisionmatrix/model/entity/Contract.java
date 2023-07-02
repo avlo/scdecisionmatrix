@@ -17,10 +17,12 @@ public class Contract {
 
   private String text;
   private Long payerStake, payeeStake, payoutAmount;
-  private Boolean payerState, payeeState, completed;
+  private Boolean completed;
   private Date agreedCompletionTime;
 
   private CreatorRoleEnum creatorRole;
+  private ContractStateEnum payerState;
+  private ContractStateEnum payeeState;
 
   private Integer appUserId;
   private Integer counterPartyId;

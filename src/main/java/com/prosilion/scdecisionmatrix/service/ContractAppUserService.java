@@ -1,8 +1,7 @@
 package com.prosilion.scdecisionmatrix.service;
 
-import com.prosilion.scdecisionmatrix.model.entity.AppUser;
-import com.prosilion.scdecisionmatrix.model.entity.AppUserAuthUser;
 import com.prosilion.scdecisionmatrix.model.entity.Contract;
+import com.prosilion.scdecisionmatrix.model.entity.ContractStateEnum;
 import com.prosilion.scdecisionmatrix.model.entity.security.AuthUserDetails;
 import java.util.List;
 import lombok.NonNull;
@@ -16,51 +15,59 @@ import org.springframework.transaction.annotation.Transactional;
 public class ContractAppUserService {
   private static final Logger LOGGER = LoggerFactory.getLogger(ContractAppUserService.class);
   private final ContractService contractService;
-  private final AppUserService appUserService;
   private final AppUserAuthUserService appUserAuthUserService;
 
   @Autowired
-  public ContractAppUserService(ContractService contractService, AppUserService appUserService, AppUserAuthUserService appUserAuthUserService) {
+  public ContractAppUserService(ContractService contractService, AppUserAuthUserService appUserAuthUserService) {
     this.contractService = contractService;
-    this.appUserService = appUserService;
     this.appUserAuthUserService = appUserAuthUserService;
   }
 
   @Transactional
-  public Contract save(@NonNull Contract contract, @NonNull AppUser appUser) {
-    LOGGER.info("Saving contract [{}], appUser ID [{}], role [{}]", contract.getText(), appUser.getId(), contract.getCreatorRole());
-    Contract savedContract = contractService.save(contract);
-    LOGGER.info("Contract saved [{}], appUser ID [{}], role [{}]", savedContract.getText(), appUser.getId(), savedContract.getCreatorRole());
-    return savedContract;
-  }
-
-  public Contract create(@NonNull Contract contract, @NonNull AuthUserDetails authUserDetails) {
-    LOGGER.info("Saving contract [{}], appUser ID [{}]", contract.getText(), authUserDetails.getUsername());
-    AppUser appUser = getAppUser(authUserDetails);
-    // TODO: maybe in a new class (encapsulate fxnality)
-    // 1) value should be subtracted from user balance via AppUserService
-    // 2) value should be added to contract via ContractService
-    contract.setAppUserId(appUser.getId());
-    return save(contract, appUser);
-  }
-
-  public List<Contract> getContracts(@NonNull AppUser user) {
-    return contractService.getContracts(user);
-  }
-
-  public List<Contract> getContracts(@NonNull AuthUserDetails authUserDetails) {
-    return contractService.getContracts(getAppUser(authUserDetails));
+  public Contract save(@NonNull Contract contract, @NonNull AuthUserDetails authUserDetails) {
+    LOGGER.info("Creating contract [{}], authUserDetails name [{}]", contract.getText(), authUserDetails.getUsername());
+    LOGGER.info("Retrieving authUser [{}]", getAppUserId(authUserDetails));
+    // TODO: check below contract doesn't already have existing different appuser ID
+    contract.setAppUserId(getAppUserId(authUserDetails));
+    LOGGER.info("Set appUser [{}] to contract [{}]", getAppUserId(authUserDetails), contract.getId());
+    return save(contract);
   }
 
   public List<Contract> getAllContracts() {
     return contractService.getAll();
   }
+  public List<Contract> getAllContractsFor(@NonNull AuthUserDetails authUserDetails) {
+    return contractService.getContractsByAppUserId(getAppUserId(authUserDetails));
+  }
 
-  private AppUser getAppUser(@NonNull AuthUserDetails authUserDetails) {
-    AppUserAuthUser user = appUserAuthUserService.getAppUserAuthUser(authUserDetails);
-    LOGGER.info("Attempt to get user [{}]", user.getAuthUserName());
-    AppUser appUser = appUserService.findById(user.getId());
-    LOGGER.info("Retrieved appUser [{}]", appUser.getId());
-    return appUser;
+  public List<Contract> getOpenContractsFor(@NonNull AuthUserDetails authUserDetails) {
+    return contractService.getAvailableOppositeRoleContractsByAppUserId(getAppUserId(authUserDetails));
+  }
+
+  public Contract constructContract(AuthUserDetails authUserDetails) {
+    return constructContract(getAppUserId(authUserDetails));
+  }
+
+  ////////////////////////
+  //  PRIVATE METHODS
+  ////////////////////////
+
+  private Contract save(@NonNull Contract contract) {
+    LOGGER.info("Saving contract [{}], appUser ID [{}], role [{}]", contract.getText(), contract.getAppUserId(), contract.getCreatorRole());
+    Contract savedContract = contractService.save(contract);
+    LOGGER.info("Contract saved [{}], appUser ID [{}], role [{}]", savedContract.getText(), savedContract.getAppUserId(), savedContract.getCreatorRole());
+    return savedContract;
+  }
+
+  private Integer getAppUserId(AuthUserDetails authUserDetails) {
+    return appUserAuthUserService.getAppUserId(authUserDetails);
+  }
+
+  private Contract constructContract(@NonNull Integer id) {
+    Contract contract = new Contract();
+    contract.setAppUserId(id);
+    contract.setPayerState(ContractStateEnum.APPROVE);
+    contract.setPayeeState(ContractStateEnum.APPROVE);
+    return contract;
   }
 }

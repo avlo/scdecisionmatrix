@@ -1,9 +1,7 @@
 package com.prosilion.scdecisionmatrix.service;
 
 import com.prosilion.scdecisionmatrix.model.entity.AppUser;
-import com.prosilion.scdecisionmatrix.model.entity.AppUserAuthUser;
 import com.prosilion.scdecisionmatrix.model.entity.Contract;
-import com.prosilion.scdecisionmatrix.model.entity.security.AuthUserDetails;
 import com.prosilion.scdecisionmatrix.repository.ContractRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -14,43 +12,39 @@ import org.springframework.stereotype.Service;
 @Service
 public class ContractService {
   private final ContractRepository contractRepository;
-  private final AppUserService appUserService;
-  private final AppUserAuthUserService appUserAuthUserService;
 
   @Autowired
-  public ContractService(ContractRepository contractRepository, AppUserAuthUserService appUserAuthUserService, AppUserService appUserService) {
+  public ContractService(ContractRepository contractRepository) {
     this.contractRepository = contractRepository;
-    this.appUserAuthUserService = appUserAuthUserService;
-    this.appUserService = appUserService;
   }
 
   @Transactional
   public Contract save(@NonNull Contract contract) {
+    //  TODD: Precondition contract appuser not null prior to save
     return contractRepository.save(contract);
   }
 
-  public List<Contract> getContracts(@NonNull AppUser user) {
-    return contractRepository.getContracts(user.getId());
+  public Contract getContractById(@NonNull Integer id) {
+    return contractRepository.getContractById(id).get();
+  }
+
+  public List<Contract> getContractsByAppUser(@NonNull AppUser appUser) {
+    return getContractsByAppUserId(appUser.getId());
+  }
+
+  public List<Contract> getAvailableOppositeRoleContractsByAppUser(@NonNull AppUser appUser) {
+    return getAvailableOppositeRoleContractsByAppUserId(appUser.getId());
+  }
+
+  public List<Contract> getAvailableOppositeRoleContractsByAppUserId(@NonNull Integer id) {
+    return contractRepository.getAvailableOppositeRoleContracts(id);
+  }
+
+  public List<Contract> getContractsByAppUserId(@NonNull Integer id) {
+    return contractRepository.getContractsByAppUserId(id);
   }
 
   public List<Contract> getAll() {
     return contractRepository.findAll();
-  }
-
-  public Contract constructContract(AuthUserDetails authUserDetails) {
-    AppUserAuthUser appUserAuthUser = appUserAuthUserService.getAppUserAuthUser(authUserDetails);
-    AppUser appUser = appUserService.findById(appUserAuthUser.getAppUserId());
-    return constructContract(appUser);
-  }
-
-  public Contract constructContract() {
-    Contract contract = new Contract();
-    return contract;
-  }
-
-  public Contract constructContract(@NonNull AppUser user) {
-    Contract contract = new Contract();
-    contract.setAppUserId(user.getId());
-    return contract;
   }
 }

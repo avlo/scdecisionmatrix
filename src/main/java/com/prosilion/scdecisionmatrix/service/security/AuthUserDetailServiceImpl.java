@@ -4,8 +4,10 @@ import com.prosilion.scdecisionmatrix.model.dto.AppUserDto;
 import com.prosilion.scdecisionmatrix.model.entity.security.AuthUserDetails;
 import com.prosilion.scdecisionmatrix.model.entity.security.AuthUserDetailsImpl;
 import javax.sql.DataSource;
+import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,6 +19,7 @@ public class AuthUserDetailServiceImpl extends JdbcUserDetailsManager implements
   private static final Logger LOGGER = LoggerFactory.getLogger(AuthUserDetailServiceImpl.class);
   private final PasswordEncoder passwordEncoder;
 
+  @Autowired
   public AuthUserDetailServiceImpl(DataSource dataSource, PasswordEncoder passwordEncoder) {
     super(dataSource);
     this.passwordEncoder = passwordEncoder;
@@ -24,7 +27,7 @@ public class AuthUserDetailServiceImpl extends JdbcUserDetailsManager implements
 
   @Transactional
   @Override
-  public void createUser(AppUserDto appUserDto) {
+  public void createUser(@NonNull AppUserDto appUserDto) {
     UserDetails userDetails = User.withUsername(appUserDto.getUsername()).password(passwordEncoder.encode(
         appUserDto.getPassword())).roles("USER").build();
     AuthUserDetails authUserDetails = new AuthUserDetailsImpl(userDetails);
@@ -32,12 +35,12 @@ public class AuthUserDetailServiceImpl extends JdbcUserDetailsManager implements
   }
 
   @Override
-  public AuthUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+  public AuthUserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
     return new AuthUserDetailsImpl(super.loadUserByUsername(username));
   }
 
   @Override
-  public AuthUserDetails loadUserByUserDto(AppUserDto appUserDto) {
+  public AuthUserDetails loadUserByUserDto(@NonNull AppUserDto appUserDto) {
     try {
       AuthUserDetails authUserDetails = loadUserByUsername(appUserDto.getUsername());
       LOGGER.info("User found");

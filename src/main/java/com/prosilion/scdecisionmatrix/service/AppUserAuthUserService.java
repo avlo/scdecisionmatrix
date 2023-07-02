@@ -40,32 +40,41 @@ public class AppUserAuthUserService {
     return appUserAuthUserRepository.saveAndFlush(appUserAuthUser);
   }
 
-  public AppUserAuthUser getAppUserAuthUser(@NonNull AppUser appUser) {
-    return appUserAuthUserRepository.findByAppUserId(appUser.getId()).get();
-  }
-
-  public AppUserAuthUser getAppUserAuthUser(@NonNull AuthUserDetails authUserDetails) {
-    return appUserAuthUserRepository.findByAuthUserName(authUserDetails.getUsername()).get();
-  }
-
-  public List<AppUserAuthUser> getAllAppUsersMappedAuthUsers() {
-    return appUserAuthUserRepository.findAll();
+  public Integer getAppUserId(@NonNull AuthUserDetails authUserDetails) {
+    return getAppUser(authUserDetails).getId();
   }
 
   /**
    * Users for view display
    *
-   * @return list of all app users
+   * @return list of all app users, specifically for view display
    */
   public List<AppUserDto> getAllAppUsersAsDto() {
     return convertAppUserToDto(getAllAppUsersMappedAuthUsers());
   }
 
-  private List<AppUserDto> convertAppUserToDto(List<AppUserAuthUser> users) {
+  /////////////////
+  // PRIVATE METHODS
+  /////////////////
+
+  private AppUser getAppUser(@NonNull AuthUserDetails authUserDetails) {
+    AppUserAuthUser appUserAuthUser = getAppUserAuthUser(authUserDetails);
+    return appUserService.findById(appUserAuthUser.getAppUserId());
+  }
+
+  private AppUserAuthUser getAppUserAuthUser(@NonNull AuthUserDetails authUserDetails) {
+    return appUserAuthUserRepository.findByAuthUserName(authUserDetails.getUsername()).get();
+  }
+
+  private List<AppUserAuthUser> getAllAppUsersMappedAuthUsers() {
+    return appUserAuthUserRepository.findAll();
+  }
+
+  private List<AppUserDto> convertAppUserToDto(@NonNull List<AppUserAuthUser> users) {
     return users.stream().map((user) -> mapToUserDto(user)).collect(Collectors.toList());
   }
 
-  private AppUserDto mapToUserDto(AppUserAuthUser appUserAuthUser) {
+  private AppUserDto mapToUserDto(@NonNull AppUserAuthUser appUserAuthUser) {
     AppUserDto userDto = new AppUserDto();
     userDto.setUsername(appUserAuthUser.getAuthUserName());
     return userDto;

@@ -9,26 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AppUserService {
-  private final BtcBalanceService btcBalanceService;
   private final AppUserRepository appUserRepository;
 
   @Autowired
-  public AppUserService(AppUserRepository appUserRepository, BtcBalanceService btcBalanceService) {
+  public AppUserService(AppUserRepository appUserRepository) {
     this.appUserRepository = appUserRepository;
-    this.btcBalanceService = btcBalanceService;
-  }
-
-  public AppUser findById(Integer id) {
-    return appUserRepository.findById(id).get();
-  }
-
-  public AppUser findByAppUser(@NonNull AppUser appUser) {
-    if (appUser.getId() != null) {
-      return findById(appUser.getId());
-    }
-    AppUser newAppUser = new AppUser();
-    newAppUser.setSatoshis(btcBalanceService.getBalance(newAppUser));
-    return newAppUser;
   }
 
   @Transactional
@@ -37,8 +22,18 @@ public class AppUserService {
     return appUserToSave.getId() != null ? appUserToSave : appUserRepository.save(appUserToSave);
   }
 
-  //	@Transactional
-  //	public AppUser createUser(@NonNull AppUser appUser) {
-  //		return appUserRepository.save(authUserDetails.authgetAppUser());
-  //	}
+  public AppUser findById(@NonNull Integer id) {
+    return appUserRepository.findById(id).get();
+  }
+
+  /////////////////
+  // PRIVATE METHODS
+  /////////////////
+
+  private AppUser findByAppUser(@NonNull AppUser appUser) {
+    if (appUser.getId() != null) {
+      return findById(appUser.getId());
+    }
+    return new AppUser();
+  }
 }
