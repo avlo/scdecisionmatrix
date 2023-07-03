@@ -34,8 +34,6 @@ public class ContractController {
 
   @PostMapping("/create")
   public String createContract(@AuthenticationPrincipal AuthUserDetails user, @NonNull Contract contract, Model model) {
-    contract.setPayerState(ContractStateEnum.APPROVE);
-    contract.setPayeeState(ContractStateEnum.APPROVE);
     joinTable.save(contract, user);
     setCanonicalModelAttributes(user, model);
     return "contract/display";
@@ -119,10 +117,6 @@ public class ContractController {
         return CreatorRoleEnum.PAYEE;
       }
       return CreatorRoleEnum.PAYER;
-    }
-
-    private boolean contractAppUserEqualsAppUser() {
-      return contractAppUserId.equals(appUserId);
     }
   }
 }

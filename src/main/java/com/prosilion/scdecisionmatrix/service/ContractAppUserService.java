@@ -37,7 +37,9 @@ public class ContractAppUserService {
     return contractService.getAll();
   }
   public List<Contract> getAllContractsFor(@NonNull AuthUserDetails authUserDetails) {
-    return contractService.getContractsByAppUserId(getAppUserId(authUserDetails));
+    List<Contract> contracts = contractService.getContractsByAppUserId(getAppUserId(authUserDetails));
+    contracts.addAll(contractService.getContractsByCoPartyId(getAppUserId(authUserDetails)));
+    return contracts;
   }
 
   public List<Contract> getOpenContractsFor(@NonNull AuthUserDetails authUserDetails) {

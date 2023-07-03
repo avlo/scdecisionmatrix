@@ -36,8 +36,12 @@ public class ContractService {
     return getAvailableOppositeRoleContractsByAppUserId(appUser.getId());
   }
 
+  public List<Contract> getContractsByCoPartyId(@NonNull Integer id) {
+    return contractRepository.getContractsByCoPartyId(id);
+  }
+
   public List<Contract> getAvailableOppositeRoleContractsByAppUserId(@NonNull Integer id) {
-    return contractRepository.getAvailableOppositeRoleContracts(id);
+    return contractRepository.getOpenContractsFor(id);
   }
 
   public List<Contract> getContractsByAppUserId(@NonNull Integer id) {

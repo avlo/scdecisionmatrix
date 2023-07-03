@@ -13,6 +13,12 @@ public interface ContractRepository extends JpaRepository<Contract, Integer> {
   @Query("SELECT c FROM Contract c WHERE c.appUserId = :appUserId")
   List<Contract> getContractsByAppUserId(@NonNull Integer appUserId);
 
+  @Query("SELECT c FROM Contract c WHERE c.counterPartyId = :coPartyId")
+  List<Contract> getContractsByCoPartyId(@NonNull Integer coPartyId);
+
+  @Query("SELECT c FROM Contract c WHERE c.appUserId <> :appUserId and c.counterPartyId is null")
+  List<Contract> getOpenContractsFor(@NonNull Integer appUserId);
+
   @Query("SELECT c FROM Contract c WHERE c.appUserId <> :appUserId")
   List<Contract> getAvailableOppositeRoleContracts(@NonNull Integer appUserId);
 
