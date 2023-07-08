@@ -44,7 +44,7 @@ DB console:
 Show all users:
 
 SELECT * FROM AUTHORITIES;  
-SELECT * FROM USERS;
-SELECT * FROM APPUSER;
-SELECT * FROM APPUSER_AUTHUSER;
-SELECT id, creator_role, app_user_id, counter_party_id, text  FROM CONTRACT;
+SELECT * FROM USERS;  
+SELECT * FROM APPUSER;  
+SELECT * FROM APPUSER_AUTHUSER;  
+SELECT id, creator_role, app_user_id, counter_party_id, text  FROM CONTRACT;  
