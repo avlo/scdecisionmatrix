@@ -1,11 +1,10 @@
 package com.prosilion.scdecisionmatrix.config;
 
 import com.prosilion.scdecisionmatrix.repository.security.AppUserAuthUserRepository;
-import com.prosilion.scdecisionmatrix.service.security.AuthUserDetailServiceImpl;
-import com.prosilion.scdecisionmatrix.service.security.AuthUserDetailsService;
 import com.prosilion.scdecisionmatrix.service.AppUserAuthUserService;
 import com.prosilion.scdecisionmatrix.service.AppUserService;
-import javax.sql.DataSource;
+import com.prosilion.scdecisionmatrix.service.security.AuthUserDetailServiceImpl;
+import com.prosilion.scdecisionmatrix.service.security.AuthUserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -16,54 +15,65 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-  private static final Logger LOGGER = LoggerFactory.getLogger(WebSecurityConfig.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebSecurityConfig.class);
 
-  @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.csrf().disable()
-        .authorizeHttpRequests((authorize) ->
-            authorize.requestMatchers("/register/**").permitAll()
-                .requestMatchers("/index").permitAll()
-                .requestMatchers("/users/**", "/contract/**").hasRole("USER")
-        ).formLogin(
-            form -> form
-                .loginPage("/login")
-                .loginProcessingUrl("/loginuser")
-                .defaultSuccessUrl("/users")
-                .permitAll()
-        ).logout(
-            logout -> logout
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .permitAll()
-        );
-    return http.build();
-  }
+    @Bean
+    MvcRequestMatcher.Builder builder() {
+        return new MvcRequestMatcher.Builder(new HandlerMappingIntrospector());
+    }
 
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc)
+            throws Exception {
+        http.authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(mvc.pattern("/register/**"))
+                        .permitAll()
+                        .requestMatchers(mvc.pattern("/index"))
+                        .permitAll()
+                        .requestMatchers(mvc.pattern("/users/**"))
+                        .permitAll()
+                        .requestMatchers(mvc.pattern("/contract/**"))
+                        .hasRole("USER"))
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/loginuser")
+                        .defaultSuccessUrl("/users")
+                        .permitAll())
+                .logout(logout -> logout
+                        .logoutRequestMatcher(mvc.pattern("/logout")).permitAll());
+        return http.build();
+    }
 
-  @Bean
-  public AppUserAuthUserService appUserAuthUserService(AuthUserDetailsService authUserDetailsService,
-      AppUserService appUserService, AppUserAuthUserRepository appUserAuthUserRepository) {
-    return new AppUserAuthUserService(authUserDetailsService, appUserService,
-        appUserAuthUserRepository);
-  }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-  @Bean
-  public AuthUserDetailsService authUserDetailsService(DataSource dataSource) {
-    AuthUserDetailsService authUserDetailsService = new AuthUserDetailServiceImpl(dataSource, passwordEncoder());
-    return authUserDetailsService;
-  }
+    @Bean
+    public AppUserAuthUserService appUserAuthUserService(
+            AuthUserDetailsService authUserDetailsService,
+            AppUserService appUserService,
+            AppUserAuthUserRepository appUserAuthUserRepository) {
+        return new AppUserAuthUserService(
+                authUserDetailsService, appUserService, appUserAuthUserRepository);
+    }
 
-  @Bean
-  WebSecurityCustomizer webSecurityCustomizer() {
-    return web -> web.ignoring().requestMatchers(new AntPathRequestMatcher("/h2-console/**"));
-  }
+    @Bean
+    public AuthUserDetailsService authUserDetailsService(DataSource dataSource) {
+        return new AuthUserDetailServiceImpl(dataSource, passwordEncoder());
+    }
+
+    @Bean
+    WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring().requestMatchers(new AntPathRequestMatcher("/h2-console/**"));
+    }
 }
