@@ -1,13 +1,11 @@
 package com.prosilion.scdecisionmatrix.controller;
 
 import com.prosilion.scdecisionmatrix.model.entity.Contract;
-import com.prosilion.scdecisionmatrix.model.entity.ContractStateEnum;
+import com.prosilion.scdecisionmatrix.model.entity.ContractAppUser;
 import com.prosilion.scdecisionmatrix.model.entity.CreatorRoleEnum;
-import com.prosilion.scdecisionmatrix.model.entity.security.AuthUserDetails;
-import com.prosilion.scdecisionmatrix.service.AppUserAuthUserService;
 import com.prosilion.scdecisionmatrix.service.ContractAppUserService;
 import com.prosilion.scdecisionmatrix.service.ContractService;
-import java.util.List;
+import edu.mayo.lpea.cad.cadence.security.core.entity.AuthUserDetails;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,26 +13,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/contract")
 public class ContractController {
   private static final Logger LOGGER = LoggerFactory.getLogger(ContractController.class);
-  private final ContractAppUserService joinTable;
+  private final ContractAppUserService contractAppUserService;
   private final ContractService contractService;
-  private final AppUserAuthUserService appUserAuthUserService;
 
   @Autowired
-  public ContractController(ContractAppUserService joinTable, ContractService contractService, AppUserAuthUserService appUserAuthUserService) {
-    this.joinTable = joinTable;
+  public ContractController(ContractAppUserService contractAppUserService, ContractService contractService) {
+    this.contractAppUserService = contractAppUserService;
     this.contractService = contractService;
-    this.appUserAuthUserService = appUserAuthUserService;
   }
 
   @PostMapping("/create")
   public String createContract(@AuthenticationPrincipal AuthUserDetails user, @NonNull Contract contract, Model model) {
-    joinTable.save(contract, user);
+    contractAppUserService.save(contract, contractAppUserService.findByUsername(user.getUsername()).getId());
     setCanonicalModelAttributes(user, model);
     return "contract/display";
   }
@@ -46,19 +47,19 @@ public class ContractController {
   }
 
   @GetMapping("/display_contract/{id}")
-  public String showAvailableContracts(@AuthenticationPrincipal AuthUserDetails user, @PathVariable("id") Integer id, Model model) {
+  public String showAvailableContracts(@AuthenticationPrincipal AuthUserDetails user, @PathVariable("id") Long id, Model model) {
     LOGGER.info("Fetching selected contract: [{}]", id);
     Contract contract = contractService.getContractById(id);
     model.addAttribute("contract", contract);
     model.addAttribute("username", user.getUsername());
-    model.addAttribute("counterPartyId", appUserAuthUserService.getAppUserId(user));
-    LOGGER.info("CounterPartyId: [{}]", appUserAuthUserService.getAppUserId(user));
+    model.addAttribute("counterPartyId", contractAppUserService.findByUsername(user.getUsername()).getId());
+    LOGGER.info("CounterPartyId: [{}]", contractAppUserService.findByUsername(user.getUsername()).getId());
     LOGGER.info("User for potential contract: {}", user.getUsername());
     return "contract/preview_contract";
   }
 
   @GetMapping("/my_contract/{id}")
-  public String showMyContracts(@AuthenticationPrincipal AuthUserDetails user, @PathVariable("id") Integer id, Model model) {
+  public String showMyContracts(@AuthenticationPrincipal AuthUserDetails user, @PathVariable("id") Long id, Model model) {
     LOGGER.info("Fetching my contract: [{}]", id);
     Contract contract = contractService.getContractById(id);
     model.addAttribute("contract", contract);
@@ -70,7 +71,7 @@ public class ContractController {
   @PostMapping("/apply")
   public String applyForContract(@AuthenticationPrincipal AuthUserDetails user, Contract contract, Model model) {
     contractService.save(contract);
-    List<Contract> contractList = joinTable.getAllContracts();
+    List<Contract> contractList = contractAppUserService.getAllContracts();
     model.addAttribute("contracts", contractList);
     return "redirect:display_user_contracts";
   }
@@ -82,7 +83,7 @@ public class ContractController {
     LOGGER.info("Contract text: [{}] ", contract.getText());
     LOGGER.info("Contract appUserId: [{}] ", contract.getAppUserId());
     contractService.save(contract);
-    List<Contract> contractList = joinTable.getAllContracts();
+    List<Contract> contractList = contractAppUserService.getAllContracts();
     model.addAttribute("contracts", contractList);
     return "redirect:display_user_contracts";
   }
@@ -91,19 +92,20 @@ public class ContractController {
   /////////////////////////
 
   private void setCanonicalModelAttributes(@NonNull AuthUserDetails user, @NonNull Model model) {
-    model.addAttribute("user_contracts", joinTable.getAllContractsFor(user));
-    model.addAttribute("open_contracts", joinTable.getOpenContractsFor(user));
-    model.addAttribute("contract", joinTable.constructContract(user));
+    ContractAppUser contractAppUser = contractAppUserService.findByUsername(user.getUsername());
+    model.addAttribute("user_contracts", contractAppUserService.getAllContractsFor(contractAppUser));
+    model.addAttribute("open_contracts", contractAppUserService.getOpenContractsFor(contractAppUser));
+    model.addAttribute("contract", contractAppUserService.constructContract(contractAppUser));
     model.addAttribute("username", user.getUsername());
   }
 
   private class RoleDeterminer {
-    Integer contractAppUserId;
-    Integer appUserId;
+    Long contractAppUserId;
+    Long appUserId;
 
     public RoleDeterminer(@NonNull Contract contract, @NonNull AuthUserDetails user) {
       this.contractAppUserId = contract.getAppUserId();
-      this.appUserId = appUserAuthUserService.getAppUserId(user);
+      this.appUserId = contractAppUserService.findByUsername(user.getUsername()).getId();
     }
 
     CreatorRoleEnum getRoleEnum(CreatorRoleEnum role) {

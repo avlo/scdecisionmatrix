@@ -1,148 +1,140 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
-  <meta charset="ISO-8859-1">
-  <title>INDEX HTML</title>
-  <link th:href="@{/css/style.css}" rel="stylesheet">
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+  <title>Contracts</title>
+  <link rel="stylesheet" th:href="@{/css/simple.css}"/>
 </head>
 <body>
-<div class="container">
-  <br><br>
-  Contract user: [[${username}]]
-  <br>
-  Security based user: <span sec:authentication="principal.username">User</span>
-  <br>
-  Security based Roles: <span sec:authentication="principal.authorities">Roles</span>
-  <br>
-  <br>
-</div>
-<div class="container">
-  My Contracts:
-  <table class="table table-bordered table-striped">
-    <thead>
-    <td>AppUserID</td>
-    <td>CoPartyID</td>
-    <td>Role</td>
-    <td>Text</td>
-    <td>PayerStake</td>
-    <td>PayeeStake</td>
-    <td>Payout$$$</td>
-    <td>PayerState</td>
-    <td>PayeeState</td>
-    <td>Completed</td>
-    </thead>
-    <br>
-    <tbody>
-    <tr th:each="user_contract: ${user_contracts}">
-      <td>
-        <a th:href="@{/contract/my_contract/{id}(id=${user_contract.getId()})}">
-          [[${user_contract.getAppUserId()}]]
-        </a>
-      </td>
-      <td>
-        <a th:href="@{/contract/my_contract/{id}(id=${user_contract.getId()})}">
-          [[${user_contract?.counterPartyId}]]
-        </a>
-      </td>
-      <td>
-        <a th:href="@{/contract/my_contract/{id}(id=${user_contract.getId()})}">
-          [[${user_contract.creatorRole}]]
-        </a>
-      </td>
-      <td>
-        <a th:href="@{/contract/my_contract/{id}(id=${user_contract.getId()})}">
-          [[${user_contract.getText()}]]
-        </a>
-      </td>
-      <td>
-        [[${user_contract.payerStake}]]
-      </td>
-      <td>
-        [[${user_contract.payeeStake}]]
-      </td>
-      <td>
-        [[${user_contract.payoutAmount}]]
-      </td>
-      <td>
-        [[${user_contract.payerState}]]
-      </td>
-      <td>
-        [[${user_contract.payeeState}]]
-      </td>
-      <td>
-        [[${user_contract.completed}]]
-      </td>
-    </tr>
-    </tbody>
-  </table>
-</div>
+<main>
+  <h4 id="sec_user">User: <code class="language-plaintext highlighter-rouge"><span sec:authentication="principal.username"/></code>&emsp;Role(s): <code class="language-plaintext highlighter-rouge"><span sec:authentication="principal.authorities"/></code></h4>
+  <section>
+    <h4>My Contracts</h4>
 
-<div class="container">
-  Open Contracts:
-  <table class="table table-bordered table-striped">
-    <thead>
-    <td>AppUserID</td>
-    <td>CoPartyID</td>
-    <td>Role</td>
-    <td>Text</td>
-    <td>PayerStake</td>
-    <td>PayeeStake</td>
-    <td>Payout$$$</td>
-    <td>PayerState</td>
-    <td>PayeeState</td>
-    <td>Completed</td>
-    </thead>
-    <br>
-    <tbody>
-    <tr th:each="open_contract: ${open_contracts}">
-      <td>
-        <a th:href="@{/contract/display_contract/{id}(id=${open_contract.getId()})}">
-          [[${open_contract.getAppUserId()}]]
-        </a>
-      </td>
-      <td>
-        <a th:href="@{/contract/display_contract/{id}(id=${open_contract.getId()})}">
-          [[${open_contract?.counterPartyId}]]
-        </a>
-      </td>
-      <td>
-        <a th:href="@{/contract/display_contract/{id}(id=${open_contract.getId()})}">
-          [[${open_contract.creatorRole}]]
-        </a>
-      </td>
-      <td>
-        <a th:href="@{/contract/display_contract/{id}(id=${open_contract.getId()})}">
-          [[${open_contract.getText()}]]
-        </a>
-      </td>
-      <td>
-        [[${open_contract.payerStake}]]
-      </td>
-      <td>
-        [[${open_contract.payeeStake}]]
-      </td>
-      <td>
-        [[${open_contract.payoutAmount}]]
-      </td>
-      <td>
-        [[${open_contract.payerState}]]
-      </td>
-      <td>
-        [[${open_contract.payeeState}]]
-      </td>
-      <td>
-        [[${open_contract.completed}]]
-      </td>
-    </tr>
-    </tbody>
-  </table>
-</div>
+    <table style="width:90%">
+      <thead>
+      <tr>
+      <th>AppUserID</th>
+      <th>CoPartyID</th>
+      <th>Role</th>
+      <th>Text</th>
+      <th>PayerStake</th>
+      <th>PayeeStake</th>
+      <th>Payout$$$</th>
+      <th>PayerState</th>
+      <th>PayeeState</th>
+      <th>Completed</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="user_contract: ${user_contracts}">
+        <td>
+          <a th:href="@{/contract/my_contract/{id}(id=${user_contract.getId()})}">
+            [[${user_contract.getAppUserId()}]]
+          </a>
+        </td>
+        <td>
+          <a th:href="@{/contract/my_contract/{id}(id=${user_contract.getId()})}">
+            [[${user_contract?.counterPartyId}]]
+          </a>
+        </td>
+        <td>
+          <a th:href="@{/contract/my_contract/{id}(id=${user_contract.getId()})}">
+            [[${user_contract.creatorRole}]]
+          </a>
+        </td>
+        <td>
+          <a th:href="@{/contract/my_contract/{id}(id=${user_contract.getId()})}">
+            [[${user_contract.getText()}]]
+          </a>
+        </td>
+        <td>
+          [[${user_contract.payerStake}]]
+        </td>
+        <td>
+          [[${user_contract.payeeStake}]]
+        </td>
+        <td>
+          [[${user_contract.payoutAmount}]]
+        </td>
+        <td>
+          [[${user_contract.payerState}]]
+        </td>
+        <td>
+          [[${user_contract.payeeState}]]
+        </td>
+        <td>
+          [[${user_contract.completed}]]
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
 
-<div class="container">
-  <br>
-  Create Contract
-  <div class="wrapper">
-    <div class="title"><span>contract creation form</span></div>
+  <section>
+    <h4>Open Contracts</h4>
+    <table style="width:90%">
+      <thead>
+      <tr>
+      <th>AppUserID</th>
+      <th>CoPartyID</th>
+      <th>Role</th>
+      <th>Text</th>
+      <th>PayerStake</th>
+      <th>PayeeStake</th>
+      <th>Payout$$$</th>
+      <th>PayerState</th>
+      <th>PayeeState</th>
+      <th>Completed</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="open_contract: ${open_contracts}">
+        <td>
+          <a th:href="@{/contract/display_contract/{id}(id=${open_contract.getId()})}">
+            [[${open_contract.getAppUserId()}]]
+          </a>
+        </td>
+        <td>
+          <a th:href="@{/contract/display_contract/{id}(id=${open_contract.getId()})}">
+            [[${open_contract?.counterPartyId}]]
+          </a>
+        </td>
+        <td>
+          <a th:href="@{/contract/display_contract/{id}(id=${open_contract.getId()})}">
+            [[${open_contract.creatorRole}]]
+          </a>
+        </td>
+        <td>
+          <a th:href="@{/contract/display_contract/{id}(id=${open_contract.getId()})}">
+            [[${open_contract.getText()}]]
+          </a>
+        </td>
+        <td>
+          [[${open_contract.payerStake}]]
+        </td>
+        <td>
+          [[${open_contract.payeeStake}]]
+        </td>
+        <td>
+          [[${open_contract.payoutAmount}]]
+        </td>
+        <td>
+          [[${open_contract.payerState}]]
+        </td>
+        <td>
+          [[${open_contract.payeeState}]]
+        </td>
+        <td>
+          [[${open_contract.completed}]]
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h4>Create Contract</h4>
     <form action="#" th:action="@{/contract/create}" th:object="${contract}" method="post">
       <label>Contract Text</label>
       <input type="text" th:field="${contract.text}" id="text" placeholder="text">
@@ -158,7 +150,10 @@
 
       <input type="submit" value="Create Contract">
     </form>
-  </div>
-</div>
+  </section>
+</main>
+<footer>
+  <p>Powered by Cadence 3 Security - LPEA/CAD Custom Applications - Mayo Clinic</p>
+</footer>
 </body>
 </html>

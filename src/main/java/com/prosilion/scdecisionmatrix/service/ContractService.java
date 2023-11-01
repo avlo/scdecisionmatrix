@@ -1,13 +1,14 @@
 package com.prosilion.scdecisionmatrix.service;
 
-import com.prosilion.scdecisionmatrix.model.entity.AppUser;
 import com.prosilion.scdecisionmatrix.model.entity.Contract;
 import com.prosilion.scdecisionmatrix.repository.ContractRepository;
+import edu.mayo.lpea.cad.cadence.security.core.entity.AppUser;
 import jakarta.transaction.Transactional;
-import java.util.List;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ContractService {
@@ -24,7 +25,7 @@ public class ContractService {
     return contractRepository.save(contract);
   }
 
-  public Contract getContractById(@NonNull Integer id) {
+  public Contract getContractById(@NonNull Long id) {
     return contractRepository.getContractById(id).get();
   }
 
@@ -36,15 +37,15 @@ public class ContractService {
     return getAvailableOppositeRoleContractsByAppUserId(appUser.getId());
   }
 
-  public List<Contract> getContractsByCoPartyId(@NonNull Integer id) {
+  public List<Contract> getContractsByCoPartyId(@NonNull Long id) {
     return contractRepository.getContractsByCoPartyId(id);
   }
 
-  public List<Contract> getAvailableOppositeRoleContractsByAppUserId(@NonNull Integer id) {
+  public List<Contract> getAvailableOppositeRoleContractsByAppUserId(@NonNull Long id) {
     return contractRepository.getOpenContractsFor(id);
   }
 
-  public List<Contract> getContractsByAppUserId(@NonNull Integer id) {
+  public List<Contract> getContractsByAppUserId(@NonNull Long id) {
     return contractRepository.getContractsByAppUserId(id);
   }
 

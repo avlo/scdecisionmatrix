@@ -1,10 +1,14 @@
 package com.prosilion.scdecisionmatrix.model.entity;
 
-import jakarta.persistence.*;
-import java.util.Date;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Date;
 
 @Getter
 @Setter
@@ -13,7 +17,7 @@ import lombok.Setter;
 public class Contract {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+  private Long id;
 
   private String text;
   private Long payerStake, payeeStake, payoutAmount;
@@ -24,6 +28,6 @@ public class Contract {
   private ContractStateEnum payerState;
   private ContractStateEnum payeeState;
 
-  private Integer appUserId;
-  private Integer counterPartyId;
+  private Long appUserId;
+  private Long counterPartyId;
 }
