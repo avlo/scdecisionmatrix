@@ -40,7 +40,7 @@ public class ContractController {
     return "contract/display";
   }
 
-  @GetMapping("/display_user_contracts")
+  @GetMapping("/display_all")
   public String showUserContracts(@AuthenticationPrincipal AuthUserDetails user, Model model) {
     setCanonicalModelAttributes(user, model);
     return "contract/display";
@@ -73,7 +73,7 @@ public class ContractController {
     contractService.save(contract);
     List<Contract> contractList = contractAppUserService.getAllContracts();
     model.addAttribute("contracts", contractList);
-    return "redirect:display_user_contracts";
+    return "redirect:display_all";
   }
 
   @PostMapping("/vote")
@@ -85,7 +85,7 @@ public class ContractController {
     contractService.save(contract);
     List<Contract> contractList = contractAppUserService.getAllContracts();
     model.addAttribute("contracts", contractList);
-    return "redirect:display_user_contracts";
+    return "redirect:display_all";
   }
   /////////////////////////
   // private methods
