@@ -6,7 +6,8 @@
 
   - Java 20
   - Spring Boot 3.x
-  - Spring JPA / Hibernate
+    - Spring Web MVC
+    - Spring JPA / Hibernate
   - [Cadence3](https://github.com/avlo/cadence3) User & Web Security Framework    
     - Spring Security
       - Pluggable Authentication & Authorization framework, (currently) supports:
