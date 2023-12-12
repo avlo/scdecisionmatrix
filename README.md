@@ -6,8 +6,7 @@
 
 #### Core technologies
 
-  - Java 20
-  - Spring Boot 3.x
+  - Spring Boot 3.x 
     - Spring Web MVC
     - Spring JPA / Hibernate
   - [Cadence3](https://github.com/avlo/cadence3) User & Web Security Framework    
@@ -18,6 +17,7 @@
         -   OAuth2/JWT
             -   Azure
             -   (additional pending)
+  - [Nostr](https://nostr.com/) (in progress)
 
 ## Requirements
 
