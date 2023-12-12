@@ -1,6 +1,8 @@
 # Product/Service registration/discovery <br> & smart-contract negotation framework
   - Intended to interface with [RGB smart-contracts](https://rgb.tech/) for BTC/LN UTXO contract-binding
-  - Contract protocol & attributes to be provided as per [Nostr](https://nostr.com/) [NIP-75](https://nostr-nips.com/nip-75) and [NIP-78](https://nostr-nips.com/nip-78)
+  - Contract protocol & attributes to be provided as per [Nostr](https://nostr.com/) NIPS:
+    - [NIP-99](https://nostr-nips.com/nip-99) Classified Listings
+    - [NIP-75](https://nostr-nips.com/nip-75) Zap Goals
 
 #### Core technologies
 
