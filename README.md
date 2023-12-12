@@ -1,5 +1,7 @@
-# Spring Boot 3.0.7 JPA Hibernate User Creation, Authentication, Authorizaton &amp; Session Management
-
+# Product/Service registration/discovery & contract-negotation framework
+  - Intended to interface with [RGB smart-contracts](https://rgb.tech/) for BTC/LN UTXO contract-binding
+  - Contract protocol & attributes to be provided via [Nostr](https://nostr.com/) [NIP-75](https://nostr-nips.com/nip-75) and [NIP-78](https://nostr-nips.com/nip-78)
+  
 ## Requirements
 
     $ java -version
@@ -32,6 +34,10 @@ Show existing users (once Authenticated):
 
     localhost:8080/users
 
+Show available contracts / Engage contract:
+
+    localhost:8080/contract/display
+
 ## Viewing DB contents
 
 DB console:
@@ -41,10 +47,14 @@ DB console:
 *user: sa*  
 *password: // blank*
 
-Show all users:
+Show all DB tables & entries:
 
-SELECT * FROM AUTHORITIES;  
-SELECT * FROM USERS;  
-SELECT * FROM APPUSER;  
-SELECT * FROM APPUSER_AUTHUSER;  
-SELECT id, creator_role, app_user_id, counter_party_id, text  FROM CONTRACT;  
+    SELECT * FROM APPUSER;
+    SELECT * FROM APPUSER_AUTHUSER;
+    SELECT * FROM CONTRACT;
+    SELECT * FROM AUTHORITIES;
+    SELECT * FROM USERS;
+
+(helpful / relationship-grokable CONTRACT table query)
+
+    SELECT c.id, b.auth_user_name as creator, d.auth_user_name as counter_party, CASE WHEN c.creator_role = 0 THEN 'payER' WHEN c.creator_role = 1 THEN 'payEE' END as creator_role, CASE WHEN c.payer_state = 0 THEN 'approve' WHEN c.payer_state = 1 THEN 'veto' END as payer_state, CASE WHEN c.payee_state = 0 THEN 'approve' WHEN c.payee_state = 1 THEN 'veto' END as payee_state, c.text FROM CONTRACT c LEFT JOIN APPUSER_AUTHUSER b ON (c.app_user_id=b.app_user_id) LEFT JOIN APPUSER_AUTHUSER d ON (c.counter_party_id=d.app_user_id);
