@@ -1,4 +1,4 @@
-# Product/Service registration/discovery <br> & smart-contract negotation framework
+# Product/Service registration/discovery & <br> smart-contract negotation framework
   - Intended to interface with [RGB smart-contracts](https://rgb.tech/) for BTC/LN UTXO contract-binding
   - Contract protocol & attributes to be provided as per [Nostr](https://nostr.com/) NIPS:
     - [NIP-15](https://nostr-nips.com/nip-15) Nostr Marketplace  
