@@ -1,11 +1,12 @@
 package com.prosilion.scdecisionmatrix.service;
 
+import com.prosilion.scdecisionmatrix.model.dto.ContractAppUserDto;
 import com.prosilion.scdecisionmatrix.model.entity.Contract;
 import com.prosilion.scdecisionmatrix.model.entity.ContractAppUser;
 import com.prosilion.scdecisionmatrix.model.entity.ContractStateEnum;
 import com.prosilion.scdecisionmatrix.repository.ContractUserRepository;
-import edu.mayo.lpea.cad.cadence.security.core.entity.AppUser;
-import edu.mayo.lpea.cad.cadence.security.core.service.AuthUserService;
+import edu.mayo.lpea.cad.cadence3.security.entity.AppUser;
+import edu.mayo.lpea.cad.cadence3.security.service.AuthUserService;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ContractAppUserService {
@@ -34,7 +37,7 @@ public class ContractAppUserService {
   }
 
   public ContractAppUser findByUsername(@NonNull String username) {
-    return findById(authUserService.getAppUserAuthUser(username).getId());
+    return findById(authUserService.getAppuserAuthuser(username).getId());
   }
 
   @Transactional
@@ -46,8 +49,14 @@ public class ContractAppUserService {
     return save(contract);
   }
 
-  public List<Contract> getAllContracts() {
-    return contractService.getAll();
+  public ContractAppUserDto update(@NonNull ContractAppUserDto contractAppUserDto) throws InvocationTargetException, IllegalAccessException {
+    LOGGER.info("CONTRACT USER - updating");
+    ContractAppUser contractAppUser = contractAppUserDto.convertToContractAppUser();
+    ContractAppUser retrievedUser = find(contractAppUser);
+    LOGGER.info("Confirm retrieved existing contractAppUser [{}]", retrievedUser);
+    ContractAppUser returnUser = contractUserRepository.save(contractAppUser);
+    LOGGER.info("Updating contractAppUser [{}]", returnUser);
+    return contractUserRepository.findById(contractAppUser.getId()).get().convertToDto();
   }
 
   public List<Contract> getAllContractsFor(@NonNull AppUser appUser) {
@@ -67,6 +76,10 @@ public class ContractAppUserService {
   ////////////////////////
   //  PRIVATE METHODS
   ////////////////////////
+
+  private ContractAppUser find(@NonNull ContractAppUser contractAppUser) {
+    return Objects.isNull(contractAppUser.getId()) ? contractAppUser : findById(contractAppUser.getId());
+  }
 
   private Contract save(@NonNull Contract contract) {
     LOGGER.info("Saving contract [{}], appUser ID [{}], role [{}]", contract.getText(), contract.getAppUserId(), contract.getCreatorRole());

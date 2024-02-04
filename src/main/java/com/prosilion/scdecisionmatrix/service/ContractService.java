@@ -2,7 +2,7 @@ package com.prosilion.scdecisionmatrix.service;
 
 import com.prosilion.scdecisionmatrix.model.entity.Contract;
 import com.prosilion.scdecisionmatrix.repository.ContractRepository;
-import edu.mayo.lpea.cad.cadence.security.core.entity.AppUser;
+import edu.mayo.lpea.cad.cadence3.security.entity.AppUser;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;

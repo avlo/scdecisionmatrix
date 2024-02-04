@@ -1,7 +1,7 @@
 //package com.prosilion.scdecisionmatrix.model.dto;
 //
 //import com.prosilion.scdecisionmatrix.model.entity.Payee;
-//import edu.mayo.lpea.cad.cadence.web.model.AppUserDto;
+//import edu.mayo.lpea.cad.cadence3.web.model.AppUserDto;
 //import lombok.EqualsAndHashCode;
 //import lombok.Getter;
 //import lombok.NoArgsConstructor;

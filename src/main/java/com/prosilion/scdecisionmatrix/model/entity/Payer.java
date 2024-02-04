@@ -1,7 +1,6 @@
 //package com.prosilion.scdecisionmatrix.model.entity;
 //
 //import com.prosilion.scdecisionmatrix.model.dto.PayerDto;
-//import edu.mayo.lpea.cad.cadence.security.core.entity.AppUser;
 //import jakarta.persistence.Embeddable;
 //import jakarta.persistence.Entity;
 //import lombok.EqualsAndHashCode;

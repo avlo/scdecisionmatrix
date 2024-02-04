@@ -1,13 +1,16 @@
 package com.prosilion.scdecisionmatrix.model.entity;
 
-import edu.mayo.lpea.cad.cadence.security.core.entity.AppUser;
+import com.prosilion.scdecisionmatrix.model.dto.ContractAppUserDto;
+import edu.mayo.lpea.cad.cadence3.security.entity.AppUser;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.BeanUtils;
+import org.apache.commons.beanutils.BeanUtils;
+
+import java.lang.reflect.InvocationTargetException;
 
 @Getter
 @Setter
@@ -15,7 +18,8 @@ import org.springframework.beans.BeanUtils;
 @NoArgsConstructor
 @Embeddable
 @Entity
-public class ContractAppUser extends AppUser implements Creator {
+public class ContractAppUser extends AppUser {
+  private String unqiueContractAppUserField;
   @Override
   public ContractAppUser getInstantiatedCustomAppUserType() {
     return this;
@@ -26,9 +30,9 @@ public class ContractAppUser extends AppUser implements Creator {
     return new ContractAppUser();
   }
 
-  public ContractAppUser convertToDto() {
-    ContractAppUser contractAppUser = new ContractAppUser();
-    BeanUtils.copyProperties(contractAppUser, this);
-    return contractAppUser;
+  public ContractAppUserDto convertToDto() throws InvocationTargetException, IllegalAccessException {
+    ContractAppUserDto contractAppUserDto = new ContractAppUserDto();
+    BeanUtils.copyProperties(contractAppUserDto, this);
+    return contractAppUserDto;
   }
 }

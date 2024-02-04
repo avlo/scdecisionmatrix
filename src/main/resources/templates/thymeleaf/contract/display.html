@@ -29,22 +29,22 @@
       <tbody>
       <tr th:each="user_contract: ${user_contracts}">
         <td>
-          <a th:href="@{/contract/my_contract/{id}(id=${user_contract.getId()})}">
+          <a th:href="@{/templates/thymeleaf/contract/my_contract/{id}(id=${user_contract.getId()})}">
             [[${user_contract.getAppUserId()}]]
           </a>
         </td>
         <td>
-          <a th:href="@{/contract/my_contract/{id}(id=${user_contract.getId()})}">
+          <a th:href="@{/templates/thymeleaf/contract/my_contract/{id}(id=${user_contract.getId()})}">
             [[${user_contract?.counterPartyId}]]
           </a>
         </td>
         <td>
-          <a th:href="@{/contract/my_contract/{id}(id=${user_contract.getId()})}">
+          <a th:href="@{/templates/thymeleaf/contract/my_contract/{id}(id=${user_contract.getId()})}">
             [[${user_contract.creatorRole}]]
           </a>
         </td>
         <td>
-          <a th:href="@{/contract/my_contract/{id}(id=${user_contract.getId()})}">
+          <a th:href="@{/templates/thymeleaf/contract/my_contract/{id}(id=${user_contract.getId()})}">
             [[${user_contract.getText()}]]
           </a>
         </td>
@@ -91,22 +91,22 @@
       <tbody>
       <tr th:each="open_contract: ${open_contracts}">
         <td>
-          <a th:href="@{/contract/display_contract/{id}(id=${open_contract.getId()})}">
+          <a th:href="@{/templates/thymeleaf/contract/display_contract/{id}(id=${open_contract.getId()})}">
             [[${open_contract.getAppUserId()}]]
           </a>
         </td>
         <td>
-          <a th:href="@{/contract/display_contract/{id}(id=${open_contract.getId()})}">
+          <a th:href="@{/templates/thymeleaf/contract/display_contract/{id}(id=${open_contract.getId()})}">
             [[${open_contract?.counterPartyId}]]
           </a>
         </td>
         <td>
-          <a th:href="@{/contract/display_contract/{id}(id=${open_contract.getId()})}">
+          <a th:href="@{/templates/thymeleaf/contract/display_contract/{id}(id=${open_contract.getId()})}">
             [[${open_contract.creatorRole}]]
           </a>
         </td>
         <td>
-          <a th:href="@{/contract/display_contract/{id}(id=${open_contract.getId()})}">
+          <a th:href="@{/templates/thymeleaf/contract/display_contract/{id}(id=${open_contract.getId()})}">
             [[${open_contract.getText()}]]
           </a>
         </td>
@@ -135,7 +135,7 @@
 
   <section>
     <h4>Create Contract</h4>
-    <form action="#" th:action="@{/contract/create}" th:object="${contract}" method="post">
+    <form action="#" th:action="@{/templates/thymeleaf/contract/create}" th:object="${contract}" method="post">
       <label>Contract Text</label>
       <input type="text" th:field="${contract.text}" id="text" placeholder="text">
       <span th:if="${#fields.hasErrors('text')}" th:errors="${contract.text}"></span>

@@ -1,22 +1,26 @@
 //package com.prosilion.scdecisionmatrix.model.entity;
 //
 //import com.prosilion.scdecisionmatrix.model.dto.PayeeDto;
-//import edu.mayo.lpea.cad.cadence.security.core.entity.AppUser;
+//import edu.mayo.lpea.cad.cadence3.security.entity.AppUser;
 //import jakarta.persistence.Embeddable;
 //import jakarta.persistence.Entity;
 //import lombok.EqualsAndHashCode;
 //import lombok.Getter;
-//import lombok.NoArgsConstructor;
 //import lombok.Setter;
 //import org.springframework.beans.BeanUtils;
 //
 //@Getter
 //@Setter
 //@EqualsAndHashCode
-//@NoArgsConstructor
 //@Embeddable
 //@Entity
-//public class Payee extends ContractAppUser implements Creator {
+//public class Payee extends AppUser implements Creator {
+//
+//  private final ContractAppUser contractAppUser;
+//
+//  public Payee(ContractAppUser contractAppUser) {
+//    this.contractAppUser = contractAppUser;
+//  }
 //
 //  @Override
 //  public Payee getInstantiatedCustomAppUserType() {

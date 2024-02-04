@@ -5,7 +5,7 @@ import com.prosilion.scdecisionmatrix.model.entity.ContractAppUser;
 import com.prosilion.scdecisionmatrix.model.entity.CreatorRoleEnum;
 import com.prosilion.scdecisionmatrix.service.ContractAppUserService;
 import com.prosilion.scdecisionmatrix.service.ContractService;
-import edu.mayo.lpea.cad.cadence.security.core.entity.AuthUserDetails;
+import edu.mayo.lpea.cad.cadence3.security.entity.AuthUserDetails;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,13 +37,13 @@ public class ContractController {
   public String createContract(@AuthenticationPrincipal AuthUserDetails user, @NonNull Contract contract, Model model) {
     contractAppUserService.save(contract, contractAppUserService.findByUsername(user.getUsername()).getId());
     setCanonicalModelAttributes(user, model);
-    return "contract/display";
+    return "thymeleaf/contract/display";
   }
 
   @GetMapping("/display_all")
   public String showUserContracts(@AuthenticationPrincipal AuthUserDetails user, Model model) {
     setCanonicalModelAttributes(user, model);
-    return "contract/display";
+    return "thymeleaf/contract/display";
   }
 
   @GetMapping("/display_contract/{id}")
@@ -55,7 +55,7 @@ public class ContractController {
     model.addAttribute("counterPartyId", contractAppUserService.findByUsername(user.getUsername()).getId());
     LOGGER.info("CounterPartyId: [{}]", contractAppUserService.findByUsername(user.getUsername()).getId());
     LOGGER.info("User for potential contract: {}", user.getUsername());
-    return "contract/preview_contract";
+    return "thymeleaf/contract/preview_contract";
   }
 
   @GetMapping("/my_contract/{id}")
@@ -65,13 +65,13 @@ public class ContractController {
     model.addAttribute("contract", contract);
     model.addAttribute("username", user.getUsername());
     model.addAttribute("role", new RoleDeterminer(contract, user).getRoleEnum(contract.getCreatorRole()));
-    return "contract/view_contract";
+    return "thymeleaf/contract/view_contract";
   }
 
   @PostMapping("/apply")
   public String applyForContract(@AuthenticationPrincipal AuthUserDetails user, Contract contract, Model model) {
     contractService.save(contract);
-    List<Contract> contractList = contractAppUserService.getAllContracts();
+    List<Contract> contractList = contractService.getAll();
     model.addAttribute("contracts", contractList);
     return "redirect:display_all";
   }
@@ -83,7 +83,7 @@ public class ContractController {
     LOGGER.info("Contract text: [{}] ", contract.getText());
     LOGGER.info("Contract appUserId: [{}] ", contract.getAppUserId());
     contractService.save(contract);
-    List<Contract> contractList = contractAppUserService.getAllContracts();
+    List<Contract> contractList = contractService.getAll();
     model.addAttribute("contracts", contractList);
     return "redirect:display_all";
   }
