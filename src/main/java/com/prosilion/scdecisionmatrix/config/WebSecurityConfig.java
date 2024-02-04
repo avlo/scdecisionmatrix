@@ -38,6 +38,11 @@ public class WebSecurityConfig {
     http.authorizeHttpRequests(authorize -> authorize
         .requestMatchers(
             mvc.pattern("/contract/**")).hasRole("USER")
+    ).formLogin(form -> form
+//        .loginPage("/login")
+//        .loginProcessingUrl("/loginuser")
+        .defaultSuccessUrl("/contract/display_all")
+        .permitAll()
     );
     return http.build();
   }
