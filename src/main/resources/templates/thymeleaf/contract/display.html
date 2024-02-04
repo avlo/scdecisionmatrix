@@ -4,14 +4,15 @@
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
   <title>Contracts</title>
   <link rel="stylesheet" th:href="@{/css/simple.css}"/>
+  <link rel="stylesheet" th:href="@{/css/tablestyles.css}"/>
 </head>
 <body>
+<header>Contracts</header>
 <main>
   <h4 id="sec_user">User: <code class="language-plaintext highlighter-rouge"><span sec:authentication="principal.username"/></code>&emsp;Role(s): <code class="language-plaintext highlighter-rouge"><span sec:authentication="principal.authorities"/></code></h4>
   <section>
     <h4>My Contracts</h4>
-
-    <table style="width:90%">
+    <table style="width:50%">
       <thead>
       <tr>
       <th>AppUserID</th>
@@ -73,7 +74,7 @@
 
   <section>
     <h4>Open Contracts</h4>
-    <table style="width:90%">
+    <table style="width:50%">
       <thead>
       <tr>
       <th>AppUserID</th>
