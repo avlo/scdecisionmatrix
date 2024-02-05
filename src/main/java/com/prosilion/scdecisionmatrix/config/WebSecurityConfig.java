@@ -23,7 +23,7 @@ public class WebSecurityConfig {
 
   @Bean
   @Primary
-  public AuthenticationSuccessHandler authenticationSuccessHandler(){
+  public AuthenticationSuccessHandler customAuthenticationSuccessHandler(){
     return new ContractDefaultLoginHandler();
   }
 
