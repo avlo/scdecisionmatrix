@@ -4,7 +4,7 @@
     - [NIP-15](https://nostr-nips.com/nip-15) Nostr Marketplace  
       &emsp;&emsp;and/or
       - [NIP-99](https://nostr-nips.com/nip-99) Classified Listings (under consideration)
-      - [NIP-23](https://nostr-nips.com/nip-23) Long-form Content (under consideration)
+      - ~~[NIP-23](https://nostr-nips.com/nip-23) Long-form Content~~ *(removed from consideration)*
     - [NIP-75](https://nostr-nips.com/nip-75) Zap Goals
     
 
