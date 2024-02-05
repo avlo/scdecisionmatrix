@@ -1,17 +1,11 @@
-                    ;                                                                                                                ;
-                    ED.                                                                                                              ED.            ED.
-           .      .,E#Wi                                                                                            .,               E#Wi            t#G.
-          ;W     ,WtE###G.                                                     j.         t                        ,Wt               E###G.           .#K:
-         f#E    i#D.E#fD#W;                   ..       :           .. GEEEEEEELEW,        Ej                      i#D.            .. E#fD#W;           :K#t
-       .E#f    f#f  E#t t##L                 ,W,     .Et          ;W, ,;;L#K;;.E##j       E#, :KW,      L        f#f             ;W, E#t t##L            L#G.
-      iWW;   .D#i   E#t  .E#K,              t##,    ,W#t         j##,    t#E   E###D.     E#t  ,#W:   ,KG.      D#i             j##, E#t  .E#K,           t#W,
-     L##Lffi:KW,    E#t    j##f            L###,   j###t        G###,    t#E   E#jG#W;    E#t   ;#W. jWi:      KW,             G###, E#t    j##f      .jffD##f
-    tLLG##L t#f     E#t    :E#K:         .E#j##,  G#fE#t      :E####,    t#E   E#t t##f   E#t    i#KED.       t#f            :E####, E#t    :E#K:    .fLLLD##L
-      ,W#i   ;#G    E#t   t##L          ;WW; ##,:K#i E#t     ;W#DG##,    t#E   E#t  :K#E: E#t     L#W.         ;#G          ;W#DG##, E#t   t##L          ;W#i
-     j#E.     :KE.  E#t .D#W;          j#E.  ##f#W,  E#t    j###DW##,    t#E   E#KDDDD###iE#t   .GKj#K.         :KE.       j###DW##, E#t .D#W;          j#E.
-   .D#j        .DW: E#tiW#G.         .D#L    ###K:   E#t   G##i,,G##,    t#E   E#f,t#Wi,,,E#t  iWf  i#K.         .DW:     G##i,,G##, E#tiW#G.          .D#f
-  ,WK,           L#,E#K##i          :K#t     ##D.    E#t :K#K:   L##,    t#E   E#t  ;#W:  E#t LK:    t#E           L#,  :K#K:   L##, E#K##i            KW,
-  EG.             jtE##D.           ...      #G      .. ;##D.    L##,     fE   DWi   ,KK: E#t i       tDj           jt ;##D.    L##, E##D.           ;W#i
-  ,                 E#t                      j          ,,,      .,,       :              ,;.                          ,,,      .,,  E#t           .D#fG.
+  ______                 __      __       __            __              __                ______                 __  ______
+ /      \               |  \    |  \     /  \          |  \            |  \              /      \               |  \/      \
+|  ▓▓▓▓▓▓\ _______  ____| ▓▓    | ▓▓\   /  ▓▓ ______  _| ▓▓_    ______  \▓▓__    __     |  ▓▓▓▓▓▓\ ______   ____| ▓▓  ▓▓▓▓▓▓\
+| ▓▓___\▓▓/       \/      ▓▓    | ▓▓▓\ /  ▓▓▓|      \|   ▓▓ \  /      \|  \  \  /  \    | ▓▓   \▓▓|      \ /      ▓▓\▓▓__| ▓▓
+ \▓▓    \|  ▓▓▓▓▓▓▓  ▓▓▓▓▓▓▓    | ▓▓▓▓\  ▓▓▓▓ \▓▓▓▓▓▓\\▓▓▓▓▓▓ |  ▓▓▓▓▓▓\ ▓▓\▓▓\/  ▓▓    | ▓▓       \▓▓▓▓▓▓\  ▓▓▓▓▓▓▓ |     ▓▓
+ _\▓▓▓▓▓▓\ ▓▓     | ▓▓  | ▓▓    | ▓▓\▓▓ ▓▓ ▓▓/      ▓▓ | ▓▓ __| ▓▓   \▓▓ ▓▓ >▓▓  ▓▓     | ▓▓   __ /      ▓▓ ▓▓  | ▓▓__\▓▓▓▓▓\
+|  \__| ▓▓ ▓▓_____| ▓▓__| ▓▓    | ▓▓ \▓▓▓| ▓▓  ▓▓▓▓▓▓▓ | ▓▓|  \ ▓▓     | ▓▓/  ▓▓▓▓\     | ▓▓__/  \  ▓▓▓▓▓▓▓ ▓▓__| ▓▓  \__| ▓▓
+ \▓▓    ▓▓\▓▓     \\▓▓    ▓▓    | ▓▓  \▓ | ▓▓\▓▓    ▓▓  \▓▓  ▓▓ ▓▓     | ▓▓  ▓▓ \▓▓\     \▓▓    ▓▓\▓▓    ▓▓\▓▓    ▓▓\▓▓    ▓▓
+  \▓▓▓▓▓▓  \▓▓▓▓▓▓▓ \▓▓▓▓▓▓▓     \▓▓      \▓▓ \▓▓▓▓▓▓▓   \▓▓▓▓ \▓▓      \▓▓\▓▓   \▓▓      \▓▓▓▓▓▓  \▓▓▓▓▓▓▓ \▓▓▓▓▓▓▓ \▓▓▓▓▓▓
 
 ScdMatrix ${application.formatted-version} - SpringBoot${spring-boot.formatted-version}
