@@ -6,13 +6,11 @@ import edu.mayo.lpea.cad.cadence3.web.controller.AuthController;
 import edu.mayo.lpea.cad.cadence3.web.controller.UsersController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 
 @Configuration
@@ -23,26 +21,17 @@ import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 public class WebSecurityConfig {
   private static final Logger LOGGER = LoggerFactory.getLogger(WebSecurityConfig.class);
 
-//  @Bean
-//  public PasswordEncoder passwordEncoder() {
-//    return new BCryptPasswordEncoder();
-//  }
-
-//  @Bean
-//  MvcRequestMatcher.Builder builder() {
-//    return new MvcRequestMatcher.Builder(new HandlerMappingIntrospector());
-//  }
+  @Bean
+  @Primary
+  public AuthenticationSuccessHandler authenticationSuccessHandler(){
+    return new ContractDefaultLoginHandler();
+  }
 
   @Bean
   public SecurityFilterChain scdFilterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
     http.authorizeHttpRequests(authorize -> authorize
         .requestMatchers(
             mvc.pattern("/contract/**")).hasRole("USER")
-    ).formLogin(form -> form
-//        .loginPage("/login")
-//        .loginProcessingUrl("/loginuser")
-        .defaultSuccessUrl("/contract/display_all")
-        .permitAll()
     );
     return http.build();
   }
