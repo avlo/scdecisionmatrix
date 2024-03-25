@@ -19,6 +19,9 @@ public class Contract {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  private String nostrAppUserId;
+  private String nostrCounterPartyId;
+
   private String text;
   private Long payerStake, payeeStake, payoutAmount;
   private Boolean completed;
